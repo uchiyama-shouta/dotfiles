@@ -1,0 +1,46 @@
+docker
+
+font-hack-nerd-font
+
+gettext
+
+gh
+
+libtermkey
+└── unibilium
+
+libuv
+
+libvterm
+
+luajit
+
+luv
+└── libuv
+
+msgpack
+
+neovim
+├── libvterm
+├── msgpack
+├── gettext
+├── libuv
+├── lpeg
+├── luajit
+├── luv
+│   └── libuv
+├── tree-sitter
+└── unibilium
+
+opera
+
+tree-sitter
+
+unibilium
+
+visual-studio-code
+
+wezterm
+
+xz
+

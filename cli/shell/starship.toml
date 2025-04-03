@@ -1,0 +1,10 @@
+scan_timeout = 10
+command_timeout = 3000
+
+[character]
+success_symbol = "🦄"
+error_symbol = "🐴"
+
+[directory]
+truncation_length = 100
+truncate_to_repo = false
