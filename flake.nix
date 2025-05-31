@@ -1,61 +1,30 @@
 {
-  description = "Home Manager configuration";
+  description = "Home Manager configuration for dotfiles";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
-    let
-      system = "x86_64-darwin";
-      pkgs = nixpkgs.legacyPackages.${system};
-    in
-    {
-      homeConfigurations = {
-        uchiyamashouta = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-
-          modules = [
-            ./cli
-            ./gui
-            {
-              nix = {
-                package = pkgs.nix;
-                settings.experimental-features = "nix-command flakes";
-              };
-              programs.home-manager.enable = true;
-
-              home = {
-                stateVersion = "23.05";
-                username = "uchiyamashouta";
-                homeDirectory = "/Users/uchiyamashouta";
-
-                packages = with pkgs; [
-                  # CLI
-                  tree
-
-                  # GUI
-                  # wezterm
-
-                  # Languages
-                  ## JS/TS
-                  nodePackages_latest.nodejs
-                  bun
-                  pnpm
-
-                  ## rust
-                  rustup
-                ];
-              };
-            }
-          ];
-        };
-      };
-      formatter.x86_64-darwin = nixpkgs.legacyPackages.x86_64-darwin.nixpkgs-fmt;
-    };
+  outputs = { nixpkgs, home-manager, flake-utils, ... }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      {
+        homeConfigurations = {
+          shouta = home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            modules = [
+              home-manager.nixosModules.home-manager
+              ./home.nix
+            ];
+          };
+          formatter = pkgs.nixpkgs-fmt;
+        }
+      });
 }

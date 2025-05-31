@@ -4,5 +4,5 @@
 - wezterm
 
 ```
-home-manager switch --flake .#uchiyamashouta --show-trace
+home-manager switch --flake .#shouta --show-trace
 ```
