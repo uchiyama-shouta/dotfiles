@@ -7,11 +7,14 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils.url = "github:numtide/flake-utils";
+    flake-utils.url = "github:numtide/flake-utils"; # formatterのためには必要
   };
 
   outputs = { nixpkgs, home-manager, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
+    let
+      systems = [ "x86_64-linux" "aarch64-darwin" ];
+    in
+    flake-utils.lib.eachSystem systems (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
       in
@@ -20,11 +23,10 @@
           shouta = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             modules = [
-              home-manager.nixosModules.home-manager
               ./home.nix
             ];
           };
-          formatter = pkgs.nixpkgs-fmt;
-        }
-      });
+        };
+      }
+    );
 }
