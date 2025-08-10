@@ -2,10 +2,10 @@
 {
   # 他のカスタム設定モジュールをインポート
   imports = [
-    ./cli
-    # ./neovim
+    ./neovim
     ./shell
   ];
+  programs.home-manager.enable = true;
 
   # ユーザー情報の設定
   home = {
@@ -16,9 +16,10 @@
     packages = with pkgs; [
       tree
     ];
-    nix = {
-      package = pkgs.nix;
-      settings.experimental-features = [ "nix-command" "flakes" ];
   };
+  nix = {
+    enable = true;
+    package = pkgs.nix;
+    settings.experimental-features = [ "nix-command" "flakes" ];
   };
 }

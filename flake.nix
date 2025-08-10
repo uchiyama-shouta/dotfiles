@@ -12,21 +12,17 @@
 
   outputs = { nixpkgs, home-manager, flake-utils, ... }:
     let
-      systems = [ "x86_64-linux" "aarch64-darwin" ];
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
     in
-    flake-utils.lib.eachSystem systems (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
-        homeConfigurations = {
-          shouta = home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            modules = [
-              ./home.nix
-            ];
-          };
+    {
+      homeConfigurations = {
+        shouta = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [
+            ./home.nix
+          ];
         };
-      }
-    );
+      };
+    };
 }
