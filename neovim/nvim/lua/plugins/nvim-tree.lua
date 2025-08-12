@@ -1,26 +1,28 @@
--- return {
---   name = "nvim-tree-lua",
---   dir = "@nvim_tree_lua@",
---   lazy = false,
---   config = function()
---     require("nvim-tree").setup({
---       view = {
---         width = 30,
---         side = "left",
---       },
---       filters = {
---         dotfiles = false,
---       },
---     })
-
---     -- キーマップの例（VSCode風）
---     vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle File Explorer" })
---   end,
--- }
-
 return  {
   name = "nvim-tree-lua",
   dir = "@nvim_tree_lua@",
-  lazy = true,
-  cmd = { "NvimTreeToggle", "NvimTreeFocus" },
+  lazy = false,
+  init = function()
+    -- 推奨: netrwを無効化
+    vim.g.loaded_netrw = 1
+    vim.g.loaded_netrwPlugin = 1
+  end,
+  keys = {
+    { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "Explorer" },
+  },
+  opts = {
+    sync_root_with_cwd = true,
+    update_focused_file = { enable = true },
+  },
+  config = function()
+    require("nvim-tree").setup({
+      view = {
+        width = 30,
+        side = "left",
+      },
+      filters = {
+        dotfiles = false,
+      },
+    })
+  end,
 }

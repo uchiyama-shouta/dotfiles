@@ -16,4 +16,10 @@ pkgs: {
     dirVar = "nvim_treesitter";
     pkg = pkgs.vimPlugins.nvim-treesitter;
   };
+
+  nvim-web-devicons = {
+    name = "nvim-web-devicons";
+    dirVar = "nvim_web_devicons";
+    pkg = pkgs.vimPlugins.nvim-web-devicons;
+  };
 }
