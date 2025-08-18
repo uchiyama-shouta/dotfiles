@@ -13,6 +13,16 @@ return  {
   opts = {
     sync_root_with_cwd = true,
     update_focused_file = { enable = true },
+    renderer = {
+      icons = {
+        show = {
+          file = true,
+          folder = true,
+          folder_arrow = true,
+          git = true,
+        },
+      },
+    },
   },
   config = function()
     require("nvim-tree").setup({
