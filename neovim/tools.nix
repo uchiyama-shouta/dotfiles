@@ -1,54 +1,54 @@
-pkgs: {
-  tools = with pkgs; [
-    # Inner tools
-    ## For telescope.nvim
+# neovim/tools.nix
+{ config, pkgs, ... }:
+let
+  np = pkgs.nodePackages;
+in {
+  home.packages = with pkgs; [
+    # Utility
     ripgrep
-
-    ## Git TUI
+    fd
     lazygit
+    jq
 
-    # Web
-    ## HTML/CSS
-    nodePackages.vscode-langservers-extracted
+    # Rust
+    rust-analyzer
+    cargo
+    clippy
+    rustfmt
 
-    ## JavaScript/TypeScript/Frameworks
-    biome
-    eslint
-    deno
-    nodePackages.prettier
-    nodePackages.typescript-language-server
-    nodePackages."@tailwindcss/language-server"
-
-    ## GraphQL
-    nodePackages.graphql-language-service-cli
-
-    # Programming languages
-    ## Lua
-    lua-language-server
-    stylua
-
-    ## Nix
-    nil
-    nixfmt-rfc-style
-
-    # Configuration languages
-    ## TOML
+    # toml LSP/formatter
     taplo
 
-    # Bash
-    nodePackages.bash-language-server
+    # Node / Web
+    np.typescript-language-server
+    ##  html / css / json
+    np.vscode-langservers-extracted
+
+    np.yaml-language-server
+    np."@tailwindcss/language-server"
+    np.graphql-language-service-cli
+    np.prettier                        # HTML/CSS/MD/JSONのfmt用
+    biome                           # TS/JS fmt+lint
+
+    # Nix
+    nixd
+    nixfmt-classic
+    statix
 
     # C/C++
     clang-tools
 
-    # Docker
-    nodePackages.dockerfile-language-server-nodejs
+    # Lua（Neovim設定用
+    lua-language-server
+    stylua
 
-    # Protocol Buffers
-    buf
-
-    # Shell
+    # Bash / Shell
+    np.bash-language-server
     shellcheck
     shfmt
+
+    # Docker
+    np.dockerfile-language-server-nodejs
+    docker-compose-language-service
   ];
 }

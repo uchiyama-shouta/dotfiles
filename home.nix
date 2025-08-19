@@ -3,6 +3,7 @@
   # 他のカスタム設定モジュールをインポート
   imports = [
     ./neovim
+    ./neovim/tools.nix
     ./shell
   ];
   programs.home-manager.enable = true;
@@ -14,8 +15,6 @@
     stateVersion = "23.05";
 
     packages = with pkgs; [
-      fd
-      ripgrep
       tree
     ];
   };
