@@ -10,9 +10,14 @@ return {
       local on_attach = require("config.lsp_keymaps")
 
       -- Rust
+      local ra_cmd = vim.fn.expand("~/.nix-profile/bin/rust-analyzer")
+      if vim.fn.filereadable(ra_cmd) == 0 then
+        ra_cmd = "rust-analyzer"
+      end
       lspconfig.rust_analyzer.setup({
+        cmd = { ra_cmd },
         capabilities = caps,
-        on_attach = _G.__my_lsp_on_attach,
+        on_attach = on_attach,
         settings = {
           ["rust-analyzer"] = {
             cargo = { allFeatures = true },
@@ -27,9 +32,7 @@ return {
         on_attach = function(client, bufnr)
           client.server_capabilities.documentFormattingProvider = false
           client.server_capabilities.documentRangeFormattingProvider = false
-          if _G.__my_lsp_on_attach then
-            _G.__my_lsp_on_attach(client, bufnr)
-          end
+          on_attach(client, bufnr)
         end,
         settings = {
           typescript = {
@@ -58,20 +61,21 @@ return {
         capabilities = caps,
         filetypes = { "graphql", "typescriptreact", "javascriptreact", "typescript", "javascript" },
       })
-      lspconfig.bashls.setup({capabilities = caps,})
+      lspconfig.bashls.setup({capabilities = caps, on_attach = on_attach})
 
       -- Docker (Dockerfile)
-      lspconfig.dockerls.setup({capabilities = caps,})
+      lspconfig.dockerls.setup({capabilities = caps, on_attach = on_attach})
 
       -- C/C++
-      lspconfig.clangd.setup({capabilities = caps,})
+      lspconfig.clangd.setup({capabilities = caps, on_attach = on_attach})
 
       -- Nix
-      lspconfig.nixd.setup({capabilities = caps,})
+      lspconfig.nixd.setup({capabilities = caps, on_attach = on_attach})
 
       -- Lua（Neovim設定）
       lspconfig.lua_ls.setup({
         capabilities = caps,
+        on_attach = on_attach,
         settings = {
           Lua = {
             diagnostics = { globals = { "vim" } },
