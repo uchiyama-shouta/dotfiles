@@ -74,6 +74,37 @@ pkgs: {
   conform-nvim = {
     name = "conform.nvim";
     dirVar = "conform_nvim";
-    pkg = pkgs.vimPlugins.conform-nvim;  # ← Nixpkgs の属性名
+    pkg = pkgs.vimPlugins.conform-nvim;
   };
+
+  which-key = {
+    name = "which-key.nvim";
+    dirVar = "which_key";
+    pkg = pkgs.vimPlugins.which-key-nvim;
+  };
+
+  comment-nvim = {
+    name = "Comment.nvim";
+    dirVar = "comment_nvim";
+    pkg = pkgs.vimPlugins.comment-nvim;
+  };
+
+  telescope-nvim = {
+    name = "telescope.nvim";
+    dirVar = "telescope_nvim";
+    pkg = pkgs.vimPlugins.telescope-nvim;
+  };
+
+  telescope-fzf-native-nvim = {
+    name = "telescope-fzf-native.nvim";
+    dirVar = "telescope_fzf_native_nvim";
+    pkg = pkgs.vimPlugins.telescope-fzf-native-nvim;
+  };
+
+  lualine-nvim = {
+    name = "lualine.nvim";
+    dirVar = "lualine_nvim";
+    pkg = pkgs.vimPlugins.lualine-nvim;
+  };
+
 }

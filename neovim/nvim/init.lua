@@ -13,3 +13,5 @@ require("lazy").setup({
 
     lockfile = vim.fn.stdpath("data") .. "/lazy/lazy-lock.json",
 })
+
+require("config.keymaps")
