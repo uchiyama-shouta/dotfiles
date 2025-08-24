@@ -112,4 +112,10 @@ pkgs: {
     dirVar = "tokyonight";
     pkg = pkgs.vimPlugins.tokyonight-nvim;
   };
+
+  bufferline = {
+    name = "bufferline.nvim";
+    dirVar = "bufferline";
+    pkg = pkgs.vimPlugins.bufferline-nvim;
+  };
 }

@@ -18,6 +18,11 @@ map("n", "<leader>sd",      builtin.diagnostics,        { desc = "Diagnostics (w
 map("n", "<leader>ss",      builtin.lsp_document_symbols, { desc = "Document Symbols" })
 map("n", "<leader>sS",      builtin.lsp_workspace_symbols, { desc = "Workspace Symbols" })
 
+map("n", "<leader>bn", ":bnext<CR>",       { desc = "Buffer Next" })
+map("n", "<leader>bp", ":bprevious<CR>",   { desc = "Buffer Prev" })
+map("n", "<leader>bd", ":bdelete<CR>",     { desc = "Buffer Delete" })
+map("n", "<leader>bl", ":BufferLinePick<CR>", { desc = "Buffer Pick" })
+
 map("n", "<leader>f.", function()
   builtin.find_files({ hidden = true, no_ignore = true })
 end, { desc = "Find Files (hidden, no_ignore)" })
@@ -27,5 +32,6 @@ pcall(function()
   wk.add({
     { "<leader>f", group = "file" },
     { "<leader>s", group = "search" },
+    { "<leader>b", group = "buffers" },
   })
 end)
