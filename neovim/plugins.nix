@@ -107,4 +107,9 @@ pkgs: {
     pkg = pkgs.vimPlugins.lualine-nvim;
   };
 
+  tokyonight = {
+    name = "tokyonight.nvim";
+    dirVar = "tokyonight";
+    pkg = pkgs.vimPlugins.tokyonight-nvim;
+  };
 }
