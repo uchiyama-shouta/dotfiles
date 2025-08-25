@@ -142,4 +142,10 @@ pkgs: {
     dirVar = "bufferline";
     pkg = pkgs.vimPlugins.bufferline-nvim;
   };
+
+  hlchunk = {
+    name = "hlchunk.nvim";
+    dirVar = "hlchunk";
+    pkg = pkgs.vimPlugins.hlchunk-nvim;
+  };
 }
