@@ -2,6 +2,7 @@ return {
   {
     name = "telescope.nvim",
     dir = "@telescope_nvim@",
+    dependencies = { { name = "plenary.nvim", dir = "@plenary_nvim@" } },
     lazy = false,
     opts = {
       defaults = {

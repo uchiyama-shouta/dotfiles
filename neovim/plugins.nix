@@ -119,6 +119,12 @@ pkgs: {
     pkg = pkgs.vimPlugins.telescope-fzf-native-nvim;
   };
 
+  plenary = {
+    name = "plenary.nvim";
+    dirVar = "plenary_nvim";
+    pkg = pkgs.vimPlugins.plenary-nvim;
+  };
+
   lualine-nvim = {
     name = "lualine.nvim";
     dirVar = "lualine_nvim";
