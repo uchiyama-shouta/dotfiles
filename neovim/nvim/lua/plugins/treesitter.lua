@@ -1,7 +1,6 @@
 return {
   name = "nvim-treesitter",
   dir = "@nvim_treesitter@",
-  build = ":TSUpdate",
   lazy = false,
   config = function()
     require("nvim-treesitter.configs").setup({
@@ -11,6 +10,8 @@ return {
       indent = {
         enable = true,
       },
+      auto_install = false,
+      ensure_installed = {},
     })
   end,
 }

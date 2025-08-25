@@ -14,7 +14,25 @@ pkgs: {
   nvim-treesitter = {
     name = "nvim-treesitter";
     dirVar = "nvim_treesitter";
-    pkg = pkgs.vimPlugins.nvim-treesitter;
+    pkg = pkgs.vimPlugins.nvim-treesitter.withPlugins (p: with p; [
+      rust
+      typescript
+      tsx
+      javascript
+      html
+      css
+      toml
+      json
+      yaml
+      bash
+      nix
+      c
+      lua
+      vim
+      vimdoc
+      markdown
+      markdown_inline
+    ]);
   };
 
   nvim-web-devicons = {

@@ -12,6 +12,11 @@ require("lazy").setup({
     spec = "plugins",
 
     lockfile = vim.fn.stdpath("data") .. "/lazy/lazy-lock.json",
+    performance = {
+        reset_packpath = false,
+        rtp = { reset = false },
+    },
+    install = { missing = false },
 })
 
 require("config.keymaps")
