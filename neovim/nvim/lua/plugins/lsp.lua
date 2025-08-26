@@ -45,6 +45,10 @@ return {
               includeInlayFunctionLikeReturnTypeHints = true,
               includeInlayEnumMemberValueHints = true,
             },
+            preferences = { importModuleSpecifier = "non-relative" },
+          },
+          javascript = {
+            preferences = { importModuleSpecifier = "non-relative" }, -- ★JS側も
           },
         },
       })
