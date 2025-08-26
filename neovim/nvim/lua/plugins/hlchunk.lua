@@ -2,7 +2,7 @@ return {
   {
     name = "hlchunk.nvim",
     dir = "@hlchunk@",
-    lazy = false,
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = {
       { name = "nvim-treesitter", dir = "@nvim_treesitter@" },
     },

@@ -1,15 +1,14 @@
 return  {
   name = "nvim-tree-lua",
   dir = "@nvim_tree_lua@",
-  lazy = false,
-  init = function()
-    -- 推奨: netrwを無効化
-    vim.g.loaded_netrw = 1
-    vim.g.loaded_netrwPlugin = 1
-  end,
+  cmd = { "NvimTreeToggle", "NvimTreeFindFile" },
   keys = {
     { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "Explorer" },
   },
+  init = function()
+    vim.g.loaded_netrw = 1
+    vim.g.loaded_netrwPlugin = 1
+  end,
   opts = {
     sync_root_with_cwd = true,
     update_focused_file = { enable = true },

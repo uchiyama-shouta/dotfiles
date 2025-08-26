@@ -1,6 +1,8 @@
 return {
   name = "conform.nvim",
   dir = "@conform_nvim@",
+  event = { "BufReadPre", "BufNewFile" },
+  cmd = "ConformInfo",
   opts = {
     formatters_by_ft = {
       -- Web

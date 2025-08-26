@@ -2,7 +2,10 @@ return {
   {
     name = "bufferline.nvim",
     dir = "@bufferline@",
-    lazy = false,
+    event = "VeryLazy",
+    keys = {
+      { "<leader>bl", "<cmd>BufferLinePick<CR>", desc = "Buffer Pick" },
+    },
     opts = {
       options = {
         offsets = {

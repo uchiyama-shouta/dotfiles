@@ -3,6 +3,7 @@ return {
   {
     name = "nvim-cmp",
     dir = "@nvim_cmp@",
+    event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
       { name = "cmp-nvim-lsp",  dir = "@cmp_nvim_lsp@" },
       { name = "cmp-buffer",    dir = "@cmp_buffer@"   },
@@ -11,7 +12,6 @@ return {
       { name = "LuaSnip",       dir = "@luasnip@"      },
       { name = "cmp-luasnip",   dir = "@cmp_luasnip@"  },
     },
-    lazy = false,
 
     config = function()
       local cmp = require("cmp")

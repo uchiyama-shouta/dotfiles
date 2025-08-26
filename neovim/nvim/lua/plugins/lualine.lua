@@ -2,7 +2,7 @@ return {
   {
     name = "lualine.nvim",
     dir = "@lualine_nvim@",
-    lazy = false,
+    event = "VeryLazy",
     opts = {
       options = {
         theme = "auto",

@@ -1,12 +1,3 @@
-
-do
-  local map = vim.keymap.set
-  map("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev Diagnostic" })
-  map("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
-  map("n", "gl", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
-end
-
--- 各バッファattach時に入れるキーマップ
 local function on_attach(_, bufnr)
   local bmap = function(mode, lhs, rhs, desc)
     vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, noremap = true, desc = desc })

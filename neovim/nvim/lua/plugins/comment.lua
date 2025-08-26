@@ -1,1 +1,12 @@
-return { { name = "Comment.nvim", dir = "@comment_nvim@", lazy = false, opts = {} } }
+return {
+  {
+    name = "Comment.nvim",
+    dir = "@comment_nvim@",
+    keys = {
+      { "gc", mode = { "n", "v" } },
+      { "gcc", mode = "n" },
+      { "gbc", mode = "n" },
+    },
+    opts = {},
+  },
+}

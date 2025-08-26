@@ -2,7 +2,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     dir = "@nvim_lspconfig@",
-    lazy = false,
+    event = { "BufReadPre", "BufNewFile" },
 
     config = function()
       local caps = require("cmp_nvim_lsp").default_capabilities()
