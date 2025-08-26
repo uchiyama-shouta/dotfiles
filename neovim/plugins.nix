@@ -148,4 +148,16 @@ pkgs: {
     dirVar = "hlchunk";
     pkg = pkgs.vimPlugins.hlchunk-nvim;
   };
+
+  nvim-autopairs = {
+    name = "nvim-autopairs";
+    dirVar = "nvim_autopairs";
+    pkg = pkgs.vimPlugins.nvim-autopairs;
+  };
+
+  nvim-ts-autotag = {
+    name = "nvim-ts-autotag";
+    dirVar = "nvim_ts_autotag";
+    pkg = pkgs.vimPlugins.nvim-ts-autotag;
+  };
 }
