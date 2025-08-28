@@ -29,7 +29,7 @@
       gpg.format = "ssh";
       commit.gpgsign = true;
       tag.gpgsign = true;
-      user.signingkey = "~/.ssh/id_ed25519.pub";
+      user.signingkey = "~/.ssh/id_ed25519_github.pub";
 
       color.ui = "auto";
       diff.renames = true;
