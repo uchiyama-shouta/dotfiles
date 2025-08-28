@@ -160,4 +160,15 @@ pkgs: {
     dirVar = "nvim_ts_autotag";
     pkg = pkgs.vimPlugins.nvim-ts-autotag;
   };
+  gitsigns = {
+    name = "gitsigns.nvim";
+    dirVar = "gitsigns_nvim";
+    pkg = pkgs.vimPlugins.gitsigns-nvim;
+  };
+
+  diffview = {
+    name = "diffview.nvim";
+    dirVar = "diffview_nvim";
+    pkg = pkgs.vimPlugins.diffview-nvim;
+  };
 }
