@@ -33,7 +33,6 @@ return {
         untracked    = { text = "▎" },
       },
       current_line_blame_opts = { delay = 500 },
-      _threaded = true,
     },
   },
 }
