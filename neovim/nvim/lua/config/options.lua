@@ -58,3 +58,18 @@ vim.api.nvim_create_autocmd("BufLeave", {
     end
   end,
 })
+
+-- clipboard
+vim.opt.clipboard = "unnamed,unnamedplus"
+
+vim.g.clipboard = {
+  name = 'osc52',
+  copy = {
+    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+  },
+  paste = {
+    ['+'] = function() return {''}, 'v' end,
+    ['*'] = function() return {''}, 'v' end,
+  },
+}
