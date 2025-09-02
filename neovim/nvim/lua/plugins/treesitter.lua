@@ -2,7 +2,7 @@ return {
   name = "nvim-treesitter",
   dir = "@nvim_treesitter@",
   event = { "BufReadPre", "BufNewFile" },
-	config = function()
+  config = function()
     require("nvim-treesitter.configs").setup({
       highlight = {
         enable = true,

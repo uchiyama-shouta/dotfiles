@@ -7,8 +7,8 @@ return {
       options = {
         theme = "auto",
         section_separators = "",
-        component_separators = ""
-      }
-    }
-  }
+        component_separators = "",
+      },
+    },
+  },
 }

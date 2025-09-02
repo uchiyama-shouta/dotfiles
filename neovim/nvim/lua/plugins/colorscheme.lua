@@ -12,7 +12,9 @@ return {
           keywords = { bold = true },
           functions = { bold = true },
         },
-        on_colors = function(c) c.bg = "#111111" end,
+        on_colors = function(c)
+          c.bg = "#111111"
+        end,
       })
       vim.cmd.colorscheme("tokyonight-night")
     end,

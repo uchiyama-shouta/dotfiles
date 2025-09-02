@@ -8,7 +8,9 @@ return {
     },
     config = function()
       local ok, autotag = pcall(require, "nvim-ts-autotag")
-      if ok then autotag.setup({}) end
+      if ok then
+        autotag.setup({})
+      end
     end,
   },
 }

@@ -9,7 +9,7 @@ return {
     opts = function()
       local colors = {
         indent = "#3B4261",
-        chunk  = "#7AA2F7",
+        chunk = "#7AA2F7",
       }
 
       return {
@@ -20,9 +20,9 @@ return {
           },
           chars = {
             horizontal_line = "─",
-            vertical_line   = "│",
-            left_top        = "┌",
-            left_bottom     = "└",
+            vertical_line = "│",
+            left_top = "┌",
+            left_bottom = "└",
           },
           notify = false,
           duration = 0,

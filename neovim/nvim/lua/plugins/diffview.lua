@@ -8,11 +8,11 @@ return {
       { name = "nvim-web-devicons", dir = "@nvim_web_devicons@" },
     },
     keys = {
-      { "<leader>go", "<cmd>DiffviewOpen<CR>",                desc = "Diffview Open" },
-      { "<leader>gq", "<cmd>DiffviewClose<CR>",               desc = "Diffview Close" },
-      { "<leader>gf", "<cmd>DiffviewToggleFiles<CR>",         desc = "Toggle Files Panel" },
-      { "<leader>gh", "<cmd>DiffviewFileHistory %<CR>",       desc = "File History (buffer)" },
-      { "<leader>gH", "<cmd>DiffviewFileHistory<CR>",         desc = "File History (repo)" },
+      { "<leader>go", "<cmd>DiffviewOpen<CR>", desc = "Diffview Open" },
+      { "<leader>gq", "<cmd>DiffviewClose<CR>", desc = "Diffview Close" },
+      { "<leader>gf", "<cmd>DiffviewToggleFiles<CR>", desc = "Toggle Files Panel" },
+      { "<leader>gh", "<cmd>DiffviewFileHistory %<CR>", desc = "File History (buffer)" },
+      { "<leader>gH", "<cmd>DiffviewFileHistory<CR>", desc = "File History (repo)" },
     },
     config = function()
       local ok, dv = pcall(require, "diffview")

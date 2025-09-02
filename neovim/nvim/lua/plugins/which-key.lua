@@ -13,5 +13,5 @@ return {
         { "<leader>g", group = "git" },
       })
     end,
-  }
+  },
 }

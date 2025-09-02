@@ -1,4 +1,4 @@
-return  {
+return {
   name = "nvim-tree-lua",
   dir = "@nvim_tree_lua@",
   cmd = { "NvimTreeToggle", "NvimTreeFindFile" },

@@ -54,27 +54,27 @@ return {
       })
 
       -- Web
-      lspconfig.html.setup({capabilities = caps,})
-      lspconfig.cssls.setup({capabilities = caps,})
-      lspconfig.jsonls.setup({capabilities = caps,})
-      lspconfig.yamlls.setup({capabilities = caps,})
+      lspconfig.html.setup({ capabilities = caps })
+      lspconfig.cssls.setup({ capabilities = caps })
+      lspconfig.jsonls.setup({ capabilities = caps })
+      lspconfig.yamlls.setup({ capabilities = caps })
 
       -- Tailwind / GraphQL / Bash
-      lspconfig.tailwindcss.setup({capabilities = caps,})
+      lspconfig.tailwindcss.setup({ capabilities = caps })
       lspconfig.graphql.setup({
         capabilities = caps,
         filetypes = { "graphql", "typescriptreact", "javascriptreact", "typescript", "javascript" },
       })
-      lspconfig.bashls.setup({capabilities = caps, on_attach = on_attach})
+      lspconfig.bashls.setup({ capabilities = caps, on_attach = on_attach })
 
       -- Docker (Dockerfile)
-      lspconfig.dockerls.setup({capabilities = caps, on_attach = on_attach})
+      lspconfig.dockerls.setup({ capabilities = caps, on_attach = on_attach })
 
       -- C/C++
-      lspconfig.clangd.setup({capabilities = caps, on_attach = on_attach})
+      lspconfig.clangd.setup({ capabilities = caps, on_attach = on_attach })
 
       -- Nix
-      lspconfig.nixd.setup({capabilities = caps, on_attach = on_attach})
+      lspconfig.nixd.setup({ capabilities = caps, on_attach = on_attach })
 
       -- Lua（Neovim設定）
       lspconfig.lua_ls.setup({

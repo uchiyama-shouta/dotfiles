@@ -24,8 +24,8 @@ vim.opt.softtabstop = 2
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "c", "cpp", "rust" },
   callback = function()
-    vim.bo.shiftwidth  = 4
-    vim.bo.tabstop     = 4
+    vim.bo.shiftwidth = 4
+    vim.bo.tabstop = 4
     vim.bo.softtabstop = 4
   end,
 })
@@ -34,8 +34,8 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "make" },
   callback = function()
     vim.bo.expandtab = false
-    vim.bo.tabstop   = 8
-    vim.bo.shiftwidth= 8
+    vim.bo.tabstop = 8
+    vim.bo.shiftwidth = 8
     vim.bo.softtabstop = 0
   end,
 })
@@ -63,13 +63,17 @@ vim.api.nvim_create_autocmd("BufLeave", {
 vim.opt.clipboard = "unnamed,unnamedplus"
 
 vim.g.clipboard = {
-  name = 'osc52',
+  name = "osc52",
   copy = {
-    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
-    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+    ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+    ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
   },
   paste = {
-    ['+'] = function() return {''}, 'v' end,
-    ['*'] = function() return {''}, 'v' end,
+    ["+"] = function()
+      return { "" }, "v"
+    end,
+    ["*"] = function()
+      return { "" }, "v"
+    end,
   },
 }
