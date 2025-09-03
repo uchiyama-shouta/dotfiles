@@ -5,8 +5,6 @@
 
   # ユーザー情報の設定
   home = {
-    username = "shouta";
-    homeDirectory = "/home/shouta";
     stateVersion = "23.05";
 
     packages = with pkgs; [ tree ];
