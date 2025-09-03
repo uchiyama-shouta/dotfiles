@@ -12,9 +12,9 @@ in {
 
     # Rust
     rust-analyzer
-    cargo
-    clippy
-    rustfmt
+    # cargo
+    # clippy
+    # rustfmt
 
     # toml LSP/formatter
     taplo

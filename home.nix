@@ -7,7 +7,12 @@
   home = {
     stateVersion = "23.05";
 
-    packages = with pkgs; [ tree ];
+    packages = with pkgs; [ 
+      tree
+      rust-bin.stable.latest.default
+      nodejs_22
+      pnpm
+    ];
   };
   nix = {
     enable = true;

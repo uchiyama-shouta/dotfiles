@@ -8,6 +8,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils"; # formatterのためには必要
+    rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
   # outputs = { nixpkgs, home-manager, flake-utils, ... }:
@@ -25,10 +26,13 @@
   #       };
   #     };
   #   };
-  outputs = { nixpkgs, home-manager, flake-utils, ... }: {
+  outputs = { nixpkgs, home-manager, flake-utils, rust-overlay, ... }: {
     homeConfigurations = {
       shouta-wsl = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs { system = "x86_64-linux"; };
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          overlays = [ (import rust-overlay ) ];
+        };
         modules = [
           ./home.nix
           { home.username = "shouta"; home.homeDirectory = "/home/shouta"; }
@@ -36,7 +40,10 @@
       };
 
       shota-ubuntu = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs { system = "x86_64-linux"; };
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          overlays = [ (import rust-overlay ) ];
+        };
         modules = [
           ./home.nix
           { home.username = "shota"; home.homeDirectory = "/home/shota"; }
