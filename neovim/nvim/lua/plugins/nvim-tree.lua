@@ -3,8 +3,8 @@ return {
   dir = "@nvim_tree_lua@",
   cmd = { "NvimTreeToggle", "NvimTreeFindFile" },
   keys = {
-    { "<leader>ee", "<cmd>NvimTreeToggle<cr>", desc = "Explorer" },
-    { "<leader>ef", "<cmd>NvimTreeFocus<cr>", desc = "Explorer" },
+    { "<leader>ee", "<cmd>NvimTreeToggle<cr>", desc = "Explorer Toggle" },
+    { "<leader>ef", "<cmd>NvimTreeFocus<cr>", desc = "Explorer Focus" },
   },
   init = function()
     vim.g.loaded_netrw = 1
