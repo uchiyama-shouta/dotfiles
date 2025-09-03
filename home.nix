@@ -1,12 +1,6 @@
-{ config, pkgs, ... }:
-{
+{ config, pkgs, ... }: {
   # 他のカスタム設定モジュールをインポート
-  imports = [
-    ./neovim
-    ./neovim/tools.nix
-    ./shell
-    ./git.nix
-  ];
+  imports = [ ./neovim ./neovim/tools.nix ./shell ./git.nix ./tmux.nix ];
   programs.home-manager.enable = true;
 
   # ユーザー情報の設定
@@ -15,9 +9,7 @@
     homeDirectory = "/home/shouta";
     stateVersion = "23.05";
 
-    packages = with pkgs; [
-      tree
-    ];
+    packages = with pkgs; [ tree ];
   };
   nix = {
     enable = true;
