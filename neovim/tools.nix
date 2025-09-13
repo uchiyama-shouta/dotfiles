@@ -1,7 +1,6 @@
 # neovim/tools.nix
 { config, pkgs, ... }:
-let
-  np = pkgs.nodePackages;
+let np = pkgs.nodePackages;
 in {
   home.packages = with pkgs; [
     # Utility
@@ -27,8 +26,8 @@ in {
     np.yaml-language-server
     np."@tailwindcss/language-server"
     np.graphql-language-service-cli
-    np.prettier                        # HTML/CSS/MD/JSONのfmt用
-    biome                           # TS/JS fmt+lint
+    np.prettier # HTML/CSS/MD/JSONのfmt用
+    biome # TS/JS fmt+lint
 
     # Nix
     nixd

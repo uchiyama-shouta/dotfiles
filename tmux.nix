@@ -71,7 +71,6 @@ in {
       bind -T copy-mode-vi v send -X begin-selection
       bind -T copy-mode-vi V send -X select-line
       bind -T copy-mode-vi C-v send -X rectangle-toggle
-      bind -T copy-mode-vi y send -X copy-pipe-and-cancel "clip"
 
       # 同一コマンド送信（複数ペインへ同時入力）
       bind a set -w synchronize-panes

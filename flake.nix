@@ -7,48 +7,47 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils.url = "github:numtide/flake-utils"; # formatterのためには必要
+    flake-utils.url = "github:numtide/flake-utils";
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  # outputs = { nixpkgs, home-manager, flake-utils, ... }:
-  #   let
-  #     system = "x86_64-linux";
-  #     pkgs = nixpkgs.legacyPackages.${system};
-  #   in
-  #   {
-  #     homeConfigurations = {
-  #       shouta = home-manager.lib.homeManagerConfiguration {
-  #         inherit pkgs;
-  #         modules = [
-  #           ./home.nix
-  #         ];
-  #       };
-  #     };
-  #   };
-  outputs = { nixpkgs, home-manager, flake-utils, rust-overlay, ... }: {
-    homeConfigurations = {
-      shouta-wsl = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          overlays = [ (import rust-overlay ) ];
-        };
-        modules = [
-          ./home.nix
-          { home.username = "shouta"; home.homeDirectory = "/home/shouta"; }
-        ];
-      };
+  outputs = { self, nixpkgs, home-manager, flake-utils, rust-overlay, ... }:
+    let overlays = [ (import rust-overlay) ];
+    in flake-utils.lib.eachDefaultSystem (system:
+      let pkgs = import nixpkgs { inherit system overlays; };
+      in {
+        # nix fmt が使うフォーマッタ（systemごと）
+        formatter = pkgs.nixfmt-classic;
+      }) // {
+        homeConfigurations = {
+          shouta-wsl = home-manager.lib.homeManagerConfiguration {
+            pkgs = import nixpkgs {
+              system = "x86_64-linux";
+              inherit overlays;
+            };
+            modules = [
+              ./home.nix
+              {
+                home.username = "shouta";
+                home.homeDirectory = "/home/shouta";
+              }
+            ];
+          };
 
-      shota-ubuntu = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          overlays = [ (import rust-overlay ) ];
+          shota-ubuntu = home-manager.lib.homeManagerConfiguration {
+            pkgs = import nixpkgs {
+              system = "x86_64-linux";
+              inherit overlays;
+            };
+            modules = [
+              ./home.nix
+              {
+                home.username = "shota";
+                home.homeDirectory = "/home/shota";
+              }
+            ];
+          };
         };
-        modules = [
-          ./home.nix
-          { home.username = "shota"; home.homeDirectory = "/home/shota"; }
-        ];
       };
-    };
-  };
 }
+

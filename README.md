@@ -1,8 +1,9 @@
-## 残り
-- neovim
-- vscode
-- wezterm
-
+# WSL2 (Linux)
 ```
-home-manager switch --flake .#shouta --show-trace
+home-manager switch --flake .#shouta
+```
+
+# Ubuntu mini-PC
+```
+home-manager switch --flake .#shota-ubuntu
 ```
