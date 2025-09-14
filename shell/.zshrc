@@ -25,6 +25,8 @@ if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
 fi
 # End Nix
 
+eval "$(keychain --quiet --eval ~/.ssh/id_ed25519_github)"
+
 # if (which zprof > /dev/null) ;then
 #     zprof | less
 # fi

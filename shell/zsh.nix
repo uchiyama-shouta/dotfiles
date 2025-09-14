@@ -1,4 +1,6 @@
-{
+{ pkgs, ... }: {
+  home.packages = [ pkgs.keychain ];
+
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
