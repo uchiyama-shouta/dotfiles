@@ -77,12 +77,9 @@
         user = "git";
         identitiesOnly = true;
         identityFile = "~/.ssh/id_ed25519_github";
+        extraOptions = { AddKeysToAgent = "yes"; };
       };
     };
-
-    extraConfig = ''
-      AddKeysToAgent yes
-    '';
   };
 
 }

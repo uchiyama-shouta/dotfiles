@@ -15,7 +15,6 @@ export PATH="$HOME/.moon/bin:$PATH"
 
 eval "$(gh completion -s zsh)"
 . $HOME/.asdf/asdf.sh
-# . "$HOME/.cargo/env"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -25,7 +24,7 @@ if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
 fi
 # End Nix
 
-eval "$(keychain --quiet --eval ~/.ssh/id_ed25519_github)"
+eval "$(keychain --quiet --eval)"
 
 # if (which zprof > /dev/null) ;then
 #     zprof | less
