@@ -10,7 +10,7 @@ in {
     jq
 
     # Rust
-    rust-analyzer
+    rust-bin.stable.latest.rust-analyzer
     # cargo
     # clippy
     # rustfmt
