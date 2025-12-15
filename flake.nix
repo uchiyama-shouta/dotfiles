@@ -26,11 +26,7 @@
               inherit overlays;
             };
             modules = [
-              ./home.nix
-              {
-                home.username = "shouta";
-                home.homeDirectory = "/home/shouta";
-              }
+              ./hosts/shouta/home-manager.nix
             ];
           };
 
@@ -40,11 +36,7 @@
               inherit overlays;
             };
             modules = [
-              ./home.nix
-              {
-                home.username = "shota";
-                home.homeDirectory = "/home/shota";
-              }
+              ./hosts/shota/home-manager.nix
             ];
           };
         };
