@@ -17,7 +17,6 @@
       rust-bin.stable.latest.default
       nodejs_22
       pnpm
-      nerd-fonts.hack
     ];
   };
 
