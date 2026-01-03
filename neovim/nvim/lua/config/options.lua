@@ -3,6 +3,7 @@ vim.opt.relativenumber = false
 
 vim.opt.list = true
 vim.opt.listchars = { space = "·", tab = "→ ", trail = "•" }
+vim.opt.wrap = false
 
 vim.api.nvim_create_autocmd("BufWritePre", {
   callback = function(args)
