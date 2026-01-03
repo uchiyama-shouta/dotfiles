@@ -20,6 +20,7 @@ in {
 
     # Node / Web
     np.typescript-language-server
+    np.svelte-language-server
     ##  html / css / json
     np.vscode-langservers-extracted
 

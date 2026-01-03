@@ -20,6 +20,7 @@ pkgs: {
         typescript
         tsx
         javascript
+        svelte
         html
         css
         toml

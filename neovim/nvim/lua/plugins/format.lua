@@ -14,6 +14,7 @@ return {
       css = { "prettier" },
       json = { "prettier" },
       markdown = { "prettier" },
+      svelte = { "prettier" },
 
       -- Rust/TOML
       rust = { "rustfmt" },

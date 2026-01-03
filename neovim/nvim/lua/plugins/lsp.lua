@@ -7,6 +7,7 @@ return {
     config = function()
       local caps = require("cmp_nvim_lsp").default_capabilities()
       local lspconfig = require("lspconfig")
+      local util = require("lspconfig.util")
       local on_attach = require("config.lsp_keymaps")
 
       -- Rust
@@ -88,6 +89,21 @@ return {
             diagnostics = { globals = { "vim" } },
             workspace = { checkThirdParty = false },
             format = { enable = false },
+          },
+        },
+      })
+
+      lspconfig.svelte.setup({
+        on_attach = on_attach,
+        capabilities = caps,
+        root_dir = util.root_pattern("svelte.config.js", "svelte.config.ts", "vite.config.js", "vite.config.ts", "package.json"),
+        settings = {
+          svelte = {
+            plugin = {
+              typescript = {
+                enable = true,
+              },
+            },
           },
         },
       })
