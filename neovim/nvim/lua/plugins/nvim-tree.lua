@@ -9,6 +9,7 @@ return {
   init = function()
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
+    vim.opt.termguicolors = true
   end,
   opts = {
     sync_root_with_cwd = true,
@@ -24,8 +25,8 @@ return {
       },
     },
   },
-  config = function()
-    require("nvim-tree").setup({
+  config = function(_, opts)
+    require("nvim-tree").setup(vim.tbl_deep_extend("force", opts, {
       view = {
         width = 30,
         side = "left",
@@ -34,6 +35,21 @@ return {
         dotfiles = false,
         git_ignored = false,
       },
+    }))
+
+    local function nvim_tree_folder_blue()
+      vim.api.nvim_set_hl(0, "NvimTreeFolderName", {
+        fg = "#0077ff",
+      })
+      vim.api.nvim_set_hl(0, "NvimTreeFolderIcon", {
+        fg = "#0077ff",
+      })
+    end
+
+    nvim_tree_folder_blue()
+
+    vim.api.nvim_create_autocmd("ColorScheme", {
+      callback = nvim_tree_folder_blue,
     })
   end,
 }

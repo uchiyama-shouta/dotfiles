@@ -133,10 +133,16 @@ pkgs: {
     pkg = pkgs.vimPlugins.lualine-nvim;
   };
 
-  tokyonight = {
-    name = "tokyonight.nvim";
-    dirVar = "tokyonight";
-    pkg = pkgs.vimPlugins.tokyonight-nvim;
+  # tokyonight = {
+  #   name = "tokyonight.nvim";
+  #   dirVar = "tokyonight";
+  #   pkg = pkgs.vimPlugins.tokyonight-nvim;
+  # };
+
+  nightfox = {
+    name = "nightfox.nvim";
+    dirVar = "nightfox";
+    pkg = pkgs.vimPlugins.nightfox-nvim;
   };
 
   bufferline = {
@@ -172,5 +178,11 @@ pkgs: {
     name = "diffview.nvim";
     dirVar = "diffview_nvim";
     pkg = pkgs.vimPlugins.diffview-nvim;
+  };
+
+  render-markdown-nvim = {
+    name = "render-markdown-nvim";
+    dirVar = "render_markdown_nvim";
+    pkg = pkgs.vimPlugins.render-markdown-nvim;
   };
 }

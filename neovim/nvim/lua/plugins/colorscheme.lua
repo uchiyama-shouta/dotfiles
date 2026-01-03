@@ -1,22 +1,21 @@
 return {
   {
-    name = "tokyonight.nvim",
-    dir = "@tokyonight@",
+    name = "EdenEast/nightfox.nvim",
+    dir = "@nightfox@",
     lazy = false,
     priority = 1000,
     config = function()
-      require("tokyonight").setup({
-        style = "night",
-        styles = {
-          comments = { italic = false },
-          keywords = { bold = true },
-          functions = { bold = true },
-        },
-        on_colors = function(c)
-          c.bg = "#111111"
-        end,
+      require("nightfox").setup({
+        options = {
+          transparent = false,
+          styles = {
+            comments = "italic",
+            keywords = "bold",
+            functions = "bold",
+          }
+        }
       })
-      vim.cmd.colorscheme("tokyonight-night")
+      vim.cmd.colorscheme("carbonfox")
     end,
   },
 }
