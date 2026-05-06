@@ -11,7 +11,7 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = { self, nixpkgs, home-manager, flake-utils, rust-overlay, ... }:
+  outputs = inputs@{ self, nixpkgs, home-manager, flake-utils, rust-overlay, ... }:
     let overlays = [ (import rust-overlay) ];
     in flake-utils.lib.eachDefaultSystem (system:
       let pkgs = import nixpkgs { inherit system overlays; };
@@ -37,6 +37,24 @@
             };
             modules = [
               ./hosts/shota/home-manager.nix
+            ];
+          };
+        };
+        nixosConfigurations = {
+          shota-nixos = nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            pkgs = import nixpkgs {
+              system = "x86_64-linux";
+              inherit overlays;
+            };
+            modules = [
+              ./hosts/shota-nixos/configuration.nix
+              home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.users.shota = import ./hosts/shota-nixos/home-manager.nix;
+              }
             ];
           };
         };
