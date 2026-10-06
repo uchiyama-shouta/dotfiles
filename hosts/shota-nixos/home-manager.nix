@@ -24,6 +24,7 @@
       pnpm
       nerd-fonts.hack
       codex
+      htop
     ];
   };
 }
