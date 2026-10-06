@@ -1,21 +1,21 @@
 pkgs: {
   lazy-nvim = {
     name = "lazy-nvim";
-    dirVar = "lazy_nvim";
+    key = "lazy_nvim";
     pkg = pkgs.vimPlugins.lazy-nvim;
   };
 
   nvim-tree-lua = {
     name = "nvim-tree-lua";
-    dirVar = "nvim_tree_lua";
+    key = "nvim_tree_lua";
     pkg = pkgs.vimPlugins.nvim-tree-lua;
   };
 
   nvim-treesitter = {
     name = "nvim-treesitter";
-    dirVar = "nvim_treesitter";
-    pkg = pkgs.vimPlugins.nvim-treesitter.withPlugins (p:
-      with p; [
+    key = "nvim_treesitter";
+    pkg = pkgs.vimPlugins.nvim-treesitter.withPlugins (
+      p: with p; [
         rust
         typescript
         tsx
@@ -34,155 +34,150 @@ pkgs: {
         vimdoc
         markdown
         markdown_inline
-      ]);
+      ]
+    );
   };
 
   nvim-web-devicons = {
     name = "nvim-web-devicons";
-    dirVar = "nvim_web_devicons";
+    key = "nvim_web_devicons";
     pkg = pkgs.vimPlugins.nvim-web-devicons;
   };
 
   nvim-lspconfig = {
     name = "nvim-lspconfig";
-    dirVar = "nvim_lspconfig";
+    key = "nvim_lspconfig";
     pkg = pkgs.vimPlugins.nvim-lspconfig;
   };
 
   nvim-cmp = {
     name = "nvim-cmp";
-    dirVar = "nvim_cmp";
+    key = "nvim_cmp";
     pkg = pkgs.vimPlugins.nvim-cmp;
   };
 
   cmp-nvim-lsp = {
     name = "cmp-nvim-lsp";
-    dirVar = "cmp_nvim_lsp";
+    key = "cmp_nvim_lsp";
     pkg = pkgs.vimPlugins.cmp-nvim-lsp;
   };
 
   cmp-buffer = {
     name = "cmp-buffer";
-    dirVar = "cmp_buffer";
+    key = "cmp_buffer";
     pkg = pkgs.vimPlugins.cmp-buffer;
   };
 
   cmp-path = {
     name = "cmp-path";
-    dirVar = "cmp_path";
+    key = "cmp_path";
     pkg = pkgs.vimPlugins.cmp-path;
   };
 
   cmp-cmdline = {
     name = "cmp-cmdline";
-    dirVar = "cmp_cmdline";
+    key = "cmp_cmdline";
     pkg = pkgs.vimPlugins.cmp-cmdline;
   };
 
   luasnip = {
     name = "luasnip";
-    dirVar = "luasnip";
+    key = "luasnip";
     pkg = pkgs.vimPlugins.luasnip;
   };
 
   cmp-luasnip = {
     name = "cmp-luasnip";
-    dirVar = "cmp_luasnip";
+    key = "cmp_luasnip";
     pkg = pkgs.vimPlugins.cmp_luasnip;
   };
 
   conform-nvim = {
     name = "conform.nvim";
-    dirVar = "conform_nvim";
+    key = "conform_nvim";
     pkg = pkgs.vimPlugins.conform-nvim;
   };
 
   which-key = {
     name = "which-key.nvim";
-    dirVar = "which_key";
+    key = "which_key";
     pkg = pkgs.vimPlugins.which-key-nvim;
   };
 
   comment-nvim = {
     name = "Comment.nvim";
-    dirVar = "comment_nvim";
+    key = "comment_nvim";
     pkg = pkgs.vimPlugins.comment-nvim;
   };
 
   telescope-nvim = {
     name = "telescope.nvim";
-    dirVar = "telescope_nvim";
+    key = "telescope_nvim";
     pkg = pkgs.vimPlugins.telescope-nvim;
   };
 
   telescope-fzf-native-nvim = {
     name = "telescope-fzf-native.nvim";
-    dirVar = "telescope_fzf_native_nvim";
+    key = "telescope_fzf_native_nvim";
     pkg = pkgs.vimPlugins.telescope-fzf-native-nvim;
   };
 
   plenary = {
     name = "plenary.nvim";
-    dirVar = "plenary_nvim";
+    key = "plenary_nvim";
     pkg = pkgs.vimPlugins.plenary-nvim;
   };
 
   lualine-nvim = {
     name = "lualine.nvim";
-    dirVar = "lualine_nvim";
+    key = "lualine_nvim";
     pkg = pkgs.vimPlugins.lualine-nvim;
   };
 
-  # tokyonight = {
-  #   name = "tokyonight.nvim";
-  #   dirVar = "tokyonight";
-  #   pkg = pkgs.vimPlugins.tokyonight-nvim;
-  # };
-
   nightfox = {
     name = "nightfox.nvim";
-    dirVar = "nightfox";
+    key = "nightfox";
     pkg = pkgs.vimPlugins.nightfox-nvim;
   };
 
   bufferline = {
     name = "bufferline.nvim";
-    dirVar = "bufferline";
+    key = "bufferline";
     pkg = pkgs.vimPlugins.bufferline-nvim;
   };
 
   hlchunk = {
     name = "hlchunk.nvim";
-    dirVar = "hlchunk";
+    key = "hlchunk";
     pkg = pkgs.vimPlugins.hlchunk-nvim;
   };
 
   nvim-autopairs = {
     name = "nvim-autopairs";
-    dirVar = "nvim_autopairs";
+    key = "nvim_autopairs";
     pkg = pkgs.vimPlugins.nvim-autopairs;
   };
 
   nvim-ts-autotag = {
     name = "nvim-ts-autotag";
-    dirVar = "nvim_ts_autotag";
+    key = "nvim_ts_autotag";
     pkg = pkgs.vimPlugins.nvim-ts-autotag;
   };
   gitsigns = {
     name = "gitsigns.nvim";
-    dirVar = "gitsigns_nvim";
+    key = "gitsigns_nvim";
     pkg = pkgs.vimPlugins.gitsigns-nvim;
   };
 
   diffview = {
     name = "diffview.nvim";
-    dirVar = "diffview_nvim";
+    key = "diffview_nvim";
     pkg = pkgs.vimPlugins.diffview-nvim;
   };
 
   render-markdown-nvim = {
     name = "render-markdown-nvim";
-    dirVar = "render_markdown_nvim";
+    key = "render_markdown_nvim";
     pkg = pkgs.vimPlugins.render-markdown-nvim;
   };
 }

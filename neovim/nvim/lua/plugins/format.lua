@@ -1,6 +1,6 @@
 return {
   name = "conform.nvim",
-  dir = "@conform_nvim@",
+  dir = require("config.nix_plugins").conform_nvim,
   event = { "BufReadPre", "BufNewFile" },
   cmd = "ConformInfo",
   opts = {
@@ -14,7 +14,7 @@ return {
       css = { "prettier" },
       json = { "prettier" },
       markdown = { "prettier" },
-      svelte = { "prettier" },
+      svelte = {}, -- The Svelte language server bundles its formatter.
 
       -- Rust/TOML
       rust = { "rustfmt" },
@@ -30,6 +30,6 @@ return {
       yaml = { "prettier" },
       sh = { "shfmt" },
     },
-    format_on_save = { lsp_fallback = true, timeout_ms = 1000 },
+    format_on_save = { lsp_format = "fallback", timeout_ms = 3000 },
   },
 }

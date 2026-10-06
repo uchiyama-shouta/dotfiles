@@ -39,10 +39,12 @@ in
 
       makeWrapper ${final.nodejs_22}/bin/node "$out/bin/codex" \
         --add-flags "$out/lib/node_modules/@openai/codex/bin/codex.js" \
-        --prefix PATH : ${final.lib.makeBinPath [
-          final.ripgrep
-          final.bubblewrap
-        ]}
+        --prefix PATH : ${
+          final.lib.makeBinPath [
+            final.ripgrep
+            final.bubblewrap
+          ]
+        }
 
       runHook postInstall
     '';

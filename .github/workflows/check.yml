@@ -1,0 +1,30 @@
+name: dotfiles
+on:
+  push:
+  pull_request:
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: experimental-features = nix-command flakes
+      - name: Check formatting and evaluation warnings
+        run: |
+          nix fmt -- --ci
+          nix develop --command stylua --check neovim/nvim tests
+          nix develop --command statix check -o errfmt . > statix.log
+          cat statix.log
+          test ! -s statix.log
+          for target in homeConfigurations.shouta-wsl.activationPackage homeConfigurations.shota-ubuntu.activationPackage nixosConfigurations.shota-nixos.config.system.build.toplevel; do
+            nix eval --no-write-lock-file ".#$target.drvPath" 2>evaluation.log
+            cat evaluation.log
+            if grep -E 'evaluation warning:|trace: warning:' evaluation.log; then exit 1; fi
+          done
+      - name: Build smoke checks and Home Manager generations
+        run: |
+          nix flake check --no-write-lock-file
+          nix build --no-link --no-write-lock-file .#homeConfigurations.shouta-wsl.activationPackage .#homeConfigurations.shota-ubuntu.activationPackage
+      - name: Build NixOS generation
+        run: nix build --no-link --no-write-lock-file .#nixosConfigurations.shota-nixos.config.system.build.toplevel

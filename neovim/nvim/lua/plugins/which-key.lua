@@ -1,11 +1,12 @@
 return {
   {
     name = "which-key.nvim",
-    dir = "@which_key@",
+    dir = require("config.nix_plugins").which_key,
     event = "VeryLazy",
     opts = {},
-    config = function()
+    config = function(_, opts)
       local wk = require("which-key")
+      wk.setup(opts)
       wk.add({
         { "<leader>f", group = "file" },
         { "<leader>s", group = "search" },

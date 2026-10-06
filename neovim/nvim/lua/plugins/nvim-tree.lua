@@ -1,6 +1,7 @@
 return {
   name = "nvim-tree-lua",
-  dir = "@nvim_tree_lua@",
+  dir = require("config.nix_plugins").nvim_tree_lua,
+  dependencies = { { name = "nvim-web-devicons", dir = require("config.nix_plugins").nvim_web_devicons } },
   cmd = { "NvimTreeToggle", "NvimTreeFindFile" },
   keys = {
     { "<leader>ee", "<cmd>NvimTreeToggle<cr>", desc = "Explorer Toggle" },

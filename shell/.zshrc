@@ -1,31 +1,30 @@
-local now=$(date +"%s")
-local updated=$(date -r ~/.zcompdump +"%s")
-local threshold=$((60 * 60 * 24))
-
-if [ $((${now} - ${updated})) -gt ${threshold} ]; then
-  compinit
-else
-  # if there are new functions can be omitted by giving the option -C.
-  compinit -C
+if [[ -d "$HOME/.moon/bin" ]]; then
+  path=("$HOME/.moon/bin" $path)
 fi
 
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
-export PATH="$HOME/.moon/bin:$PATH"
-
-eval "$(gh completion -s zsh)"
-. $HOME/.asdf/asdf.sh
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# Nix
-if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-  source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+# GUI logins unlock through askpass; terminal-only sessions use their TTY.
+if [[ -t 0 ]]; then
+  ssh-unlock --auto || true
 fi
-# End Nix
 
-eval "$(keychain --quiet --eval)"
+function dcex() {
+  if (( $# == 0 )); then
+    print -u2 'usage: dcex SERVICE [COMMAND [ARG...]]'
+    return 2
+  fi
+  local service="$1"
+  shift
+  if (( $# == 0 )); then
+    docker compose exec "$service" sh
+  else
+    docker compose exec "$service" "$@"
+  fi
+}
 
-# if (which zprof > /dev/null) ;then
-#     zprof | less
-# fi
+function dcpurge() {
+  local answer
+  read -r "answer?Delete this project's Docker volumes and images? [y/N] "
+  if [[ "$answer" == [yY] ]]; then
+    docker compose down --rmi all --volumes --remove-orphans
+  fi
+}

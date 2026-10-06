@@ -1,10 +1,10 @@
 return {
   {
     name = "hlchunk.nvim",
-    dir = "@hlchunk@",
+    dir = require("config.nix_plugins").hlchunk,
     event = { "BufReadPost", "BufNewFile" },
     dependencies = {
-      { name = "nvim-treesitter", dir = "@nvim_treesitter@" },
+      { name = "nvim-treesitter", dir = require("config.nix_plugins").nvim_treesitter },
     },
     opts = function()
       local colors = {

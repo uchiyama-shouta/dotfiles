@@ -1,28 +1,17 @@
-{ config, pkgs, ... }: {
-  # 他のカスタム設定モジュールをインポート
-  imports = [ ../../neovim ../../neovim/tools.nix ../../shell ../../git.nix ../../tmux.nix ];
-
-  programs.home-manager.enable = true;
-  fonts.fontconfig.enable = true;
-
-  # ユーザー情報の設定
+{ pkgs, ... }:
+{
+  imports = [ ../common/home-manager.nix ];
   home = {
-    stateVersion = "23.05";
-
     username = "shouta";
     homeDirectory = "/home/shouta";
-
-    packages = with pkgs; [
-      tree
-      rust-bin.stable.latest.default
-      nodejs_22
-      pnpm
-    ];
+    packages = with pkgs; [ ];
   };
-
   nix = {
     enable = true;
     package = pkgs.nix;
-    settings.experimental-features = [ "nix-command" "flakes" ];
+    settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
   };
 }

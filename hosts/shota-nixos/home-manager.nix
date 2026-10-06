@@ -1,30 +1,17 @@
-{ config, pkgs, ... }: {
-  # 他のカスタム設定モジュールをインポート
-  imports = [ ../../neovim ../../neovim/tools.nix ../../shell ../../git.nix ../../tmux.nix ];
-
-  programs.home-manager.enable = true;
-
-  programs.firefox = {
-    enable = true;
-  };
-
-  fonts.fontconfig.enable = true;
-
-  # ユーザー情報の設定
+{ pkgs, ... }:
+{
+  imports = [ ../common/home-manager.nix ];
   home = {
-    stateVersion = "23.05";
-
     username = "shota";
     homeDirectory = "/home/shota";
-
     packages = with pkgs; [
-      tree
-      rust-bin.stable.latest.default
-      nodejs_22
-      pnpm
       nerd-fonts.hack
       codex
       htop
     ];
+  };
+  programs.firefox = {
+    enable = true;
+    configPath = ".mozilla/firefox";
   };
 }

@@ -2,15 +2,15 @@
 return {
   {
     name = "nvim-cmp",
-    dir = "@nvim_cmp@",
+    dir = require("config.nix_plugins").nvim_cmp,
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
-      { name = "cmp-nvim-lsp", dir = "@cmp_nvim_lsp@" },
-      { name = "cmp-buffer", dir = "@cmp_buffer@" },
-      { name = "cmp-path", dir = "@cmp_path@" },
-      { name = "cmp-cmdline", dir = "@cmp_cmdline@" },
-      { name = "LuaSnip", dir = "@luasnip@" },
-      { name = "cmp-luasnip", dir = "@cmp_luasnip@" },
+      { name = "cmp-nvim-lsp", dir = require("config.nix_plugins").cmp_nvim_lsp },
+      { name = "cmp-buffer", dir = require("config.nix_plugins").cmp_buffer },
+      { name = "cmp-path", dir = require("config.nix_plugins").cmp_path },
+      { name = "cmp-cmdline", dir = require("config.nix_plugins").cmp_cmdline },
+      { name = "LuaSnip", dir = require("config.nix_plugins").luasnip },
+      { name = "cmp-luasnip", dir = require("config.nix_plugins").cmp_luasnip },
     },
 
     config = function()

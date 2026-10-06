@@ -1,16 +1,13 @@
 return {
   {
     name = "nvim-ts-autotag",
-    dir = "@nvim_ts_autotag@",
+    dir = require("config.nix_plugins").nvim_ts_autotag,
     event = "InsertEnter",
     dependencies = {
-      { name = "nvim-treesitter", dir = "@nvim_treesitter@" },
+      { name = "nvim-treesitter", dir = require("config.nix_plugins").nvim_treesitter },
     },
     config = function()
-      local ok, autotag = pcall(require, "nvim-ts-autotag")
-      if ok then
-        autotag.setup({})
-      end
+      require("nvim-ts-autotag").setup({})
     end,
   },
 }
