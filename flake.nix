@@ -12,7 +12,7 @@
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, flake-utils, rust-overlay, ... }:
-    let overlays = [ (import rust-overlay) ];
+    let overlays = [ (import rust-overlay) (import ./overlays/codex.nix) ];
     in flake-utils.lib.eachDefaultSystem (system:
       let pkgs = import nixpkgs { inherit system overlays; };
       in {
@@ -60,4 +60,3 @@
         };
       };
 }
-
