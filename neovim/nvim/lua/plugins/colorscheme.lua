@@ -1,7 +1,7 @@
 return {
   {
     name = "EdenEast/nightfox.nvim",
-    dir = "@nightfox@",
+    dir = require("config.nix_plugins").nightfox,
     lazy = false,
     priority = 1000,
     config = function()
@@ -12,8 +12,8 @@ return {
             comments = "italic",
             keywords = "bold",
             functions = "bold",
-          }
-        }
+          },
+        },
       })
       vim.cmd.colorscheme("carbonfox")
     end,

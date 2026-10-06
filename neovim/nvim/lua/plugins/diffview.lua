@@ -1,11 +1,11 @@
 return {
   {
     name = "diffview.nvim",
-    dir = "@diffview_nvim@",
+    dir = require("config.nix_plugins").diffview_nvim,
     cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFileHistory" },
     dependencies = {
-      { name = "plenary.nvim", dir = "@plenary_nvim@" },
-      { name = "nvim-web-devicons", dir = "@nvim_web_devicons@" },
+      { name = "plenary.nvim", dir = require("config.nix_plugins").plenary_nvim },
+      { name = "nvim-web-devicons", dir = require("config.nix_plugins").nvim_web_devicons },
     },
     keys = {
       { "<leader>go", "<cmd>DiffviewOpen<CR>", desc = "Diffview Open" },
@@ -15,14 +15,12 @@ return {
       { "<leader>gH", "<cmd>DiffviewFileHistory<CR>", desc = "File History (repo)" },
     },
     config = function()
-      local ok, dv = pcall(require, "diffview")
-      if ok then
-        dv.setup({
-          enhanced_diff_hl = true,
-          view = { merge_tool = { layout = "diff3_mixed" } },
-          file_panel = { listing_style = "tree" },
-        })
-      end
+      local dv = require("diffview")
+      dv.setup({
+        enhanced_diff_hl = true,
+        view = { merge_tool = { layout = "diff3_mixed" } },
+        file_panel = { listing_style = "tree" },
+      })
     end,
   },
 }

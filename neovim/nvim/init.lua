@@ -3,7 +3,10 @@ vim.loader.enable()
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
-local lazypath = "@lazy_nvim@"
+local lazypath = require("config.nix_plugins").lazy_nvim
+for _, path in ipairs(require("config.nix_plugins").treesitter_runtime) do
+  vim.opt.rtp:append(path)
+end
 
 vim.opt.rtp:prepend(lazypath)
 
@@ -17,6 +20,8 @@ require("lazy").setup({
     rtp = { reset = false },
   },
   install = { missing = false },
+  checker = { enabled = false },
+  change_detection = { enabled = false },
 })
 
 require("config.keymaps")

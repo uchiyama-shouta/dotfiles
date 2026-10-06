@@ -1,24 +1,22 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    dir = "@nvim_lspconfig@",
+    dir = require("config.nix_plugins").nvim_lspconfig,
     event = { "BufReadPre", "BufNewFile" },
+    dependencies = { { name = "cmp-nvim-lsp", dir = require("config.nix_plugins").cmp_nvim_lsp } },
 
     config = function()
       local caps = require("cmp_nvim_lsp").default_capabilities()
-      local lspconfig = require("lspconfig")
-      local util = require("lspconfig.util")
-      local on_attach = require("config.lsp_keymaps")
+      local enabled = {}
+      local function setup(name, opts)
+        vim.lsp.config(name, opts)
+        table.insert(enabled, name)
+      end
+      require("config.lsp_keymaps").setup()
 
       -- Rust
-      local ra_cmd = vim.fn.expand("~/.nix-profile/bin/rust-analyzer")
-      if vim.fn.filereadable(ra_cmd) == 0 then
-        ra_cmd = "rust-analyzer"
-      end
-      lspconfig.rust_analyzer.setup({
-        cmd = { ra_cmd },
+      setup("rust_analyzer", {
         capabilities = caps,
-        on_attach = on_attach,
         settings = {
           ["rust-analyzer"] = {
             cargo = { allFeatures = true },
@@ -31,12 +29,11 @@ return {
       })
 
       -- TypeScript / JavaScript（Node系）
-      lspconfig.ts_ls.setup({
+      setup("ts_ls", {
         capabilities = caps,
-        on_attach = function(client, bufnr)
+        on_attach = function(client)
           client.server_capabilities.documentFormattingProvider = false
           client.server_capabilities.documentRangeFormattingProvider = false
-          on_attach(client, bufnr)
         end,
         settings = {
           typescript = {
@@ -58,32 +55,31 @@ return {
       })
 
       -- Web
-      lspconfig.html.setup({ capabilities = caps })
-      lspconfig.cssls.setup({ capabilities = caps })
-      lspconfig.jsonls.setup({ capabilities = caps })
-      lspconfig.yamlls.setup({ capabilities = caps })
+      setup("html", { capabilities = caps })
+      setup("cssls", { capabilities = caps })
+      setup("jsonls", { capabilities = caps })
+      setup("yamlls", { capabilities = caps })
 
       -- Tailwind / GraphQL / Bash
-      lspconfig.tailwindcss.setup({ capabilities = caps })
-      lspconfig.graphql.setup({
+      setup("tailwindcss", { capabilities = caps })
+      setup("graphql", {
         capabilities = caps,
         filetypes = { "graphql", "typescriptreact", "javascriptreact", "typescript", "javascript" },
       })
-      lspconfig.bashls.setup({ capabilities = caps, on_attach = on_attach })
+      setup("bashls", { capabilities = caps })
 
       -- Docker (Dockerfile)
-      lspconfig.dockerls.setup({ capabilities = caps, on_attach = on_attach })
+      setup("dockerls", { capabilities = caps })
 
       -- C/C++
-      lspconfig.clangd.setup({ capabilities = caps, on_attach = on_attach })
+      setup("clangd", { capabilities = caps })
 
       -- Nix
-      lspconfig.nixd.setup({ capabilities = caps, on_attach = on_attach })
+      setup("nixd", { capabilities = caps })
 
       -- Lua（Neovim設定）
-      lspconfig.lua_ls.setup({
+      setup("lua_ls", {
         capabilities = caps,
-        on_attach = on_attach,
         settings = {
           Lua = {
             diagnostics = { globals = { "vim" } },
@@ -93,10 +89,16 @@ return {
         },
       })
 
-      lspconfig.svelte.setup({
-        on_attach = on_attach,
+      setup("svelte", {
         capabilities = caps,
-        root_dir = util.root_pattern("svelte.config.js", "svelte.config.ts", "vite.config.js", "vite.config.ts", "package.json"),
+        root_markers = {
+          "svelte.config.js",
+          "svelte.config.ts",
+          "vite.config.js",
+          "vite.config.ts",
+          "package.json",
+          ".git",
+        },
         settings = {
           svelte = {
             plugin = {
@@ -107,6 +109,7 @@ return {
           },
         },
       })
+      vim.lsp.enable(enabled)
     end,
   },
 }

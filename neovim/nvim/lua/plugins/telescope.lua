@@ -1,11 +1,11 @@
 return {
   {
     name = "telescope.nvim",
-    dir = "@telescope_nvim@",
+    dir = require("config.nix_plugins").telescope_nvim,
     cmd = "Telescope",
     dependencies = {
-      { name = "plenary.nvim", dir = "@plenary_nvim@" },
-      { name = "telescope-fzf-native.nvim", dir = "@telescope_fzf_native_nvim@", build = "make" },
+      { name = "plenary.nvim", dir = require("config.nix_plugins").plenary_nvim },
+      { name = "telescope-fzf-native.nvim", dir = require("config.nix_plugins").telescope_fzf_native_nvim },
     },
     keys = {
       {
@@ -113,11 +113,9 @@ return {
       },
     },
     config = function(_, opts)
-      local ok, telescope = pcall(require, "telescope")
-      if ok then
-        telescope.setup(opts)
-        pcall(telescope.load_extension, "fzf")
-      end
+      local telescope = require("telescope")
+      telescope.setup(opts)
+      telescope.load_extension("fzf")
     end,
   },
 }

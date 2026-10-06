@@ -1,6 +1,6 @@
 return {
   name = "nvim-web-devicons",
-  dir = "@nvim_web_devicons@",
+  dir = require("config.nix_plugins").nvim_web_devicons,
   event = "VeryLazy",
   opts = { default = true },
   config = function(_, opts)

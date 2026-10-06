@@ -1,23 +1,23 @@
 return {
   {
     name = "gitsigns.nvim",
-    dir = "@gitsigns_nvim@",
+    dir = require("config.nix_plugins").gitsigns_nvim,
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      { name = "plenary.nvim", dir = "@plenary_nvim@" },
+      { name = "plenary.nvim", dir = require("config.nix_plugins").plenary_nvim },
     },
     keys = {
       {
         "]h",
         function()
-          require("gitsigns").next_hunk()
+          require("gitsigns").nav_hunk("next")
         end,
         desc = "Next Hunk",
       },
       {
         "[h",
         function()
-          require("gitsigns").prev_hunk()
+          require("gitsigns").nav_hunk("prev")
         end,
         desc = "Prev Hunk",
       },

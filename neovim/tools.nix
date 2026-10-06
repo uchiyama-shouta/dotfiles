@@ -31,7 +31,7 @@
 
     # Nix
     nixd
-    nixfmt-classic
+    nixfmt
     statix
 
     # C/C++
@@ -47,7 +47,7 @@
     shfmt
 
     # Docker
-    dockerfile-language-server-nodejs
+    dockerfile-language-server
     docker-compose-language-service
   ];
 }

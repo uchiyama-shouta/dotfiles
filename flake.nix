@@ -11,52 +11,81 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, flake-utils, rust-overlay, ... }:
-    let overlays = [ (import rust-overlay) (import ./overlays/codex.nix) ];
-    in flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = import nixpkgs { inherit system overlays; };
-      in {
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      flake-utils,
+      rust-overlay,
+      ...
+    }:
+    let
+      overlays = [
+        (import rust-overlay)
+        (import ./overlays/codex.nix)
+      ];
+    in
+    flake-utils.lib.eachSystem [ "x86_64-linux" ] (
+      system:
+      let
+        pkgs = import nixpkgs { inherit system overlays; };
+      in
+      {
         # nix fmt が使うフォーマッタ（systemごと）
-        formatter = pkgs.nixfmt-classic;
-      }) // {
-        homeConfigurations = {
-          shouta-wsl = home-manager.lib.homeManagerConfiguration {
-            pkgs = import nixpkgs {
-              system = "x86_64-linux";
-              inherit overlays;
-            };
-            modules = [
-              ./hosts/shouta/home-manager.nix
-            ];
-          };
-
-          shota-ubuntu = home-manager.lib.homeManagerConfiguration {
-            pkgs = import nixpkgs {
-              system = "x86_64-linux";
-              inherit overlays;
-            };
-            modules = [
-              ./hosts/shota/home-manager.nix
-            ];
-          };
+        formatter = pkgs.nixfmt-tree;
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            nixfmt
+            stylua
+            statix
+            shellcheck
+          ];
         };
-        nixosConfigurations = {
-          shota-nixos = nixpkgs.lib.nixosSystem {
+        checks = import ./tests/checks.nix { inherit pkgs self; };
+      }
+    )
+    // {
+      homeConfigurations = {
+        shouta-wsl = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs {
             system = "x86_64-linux";
-            pkgs = import nixpkgs {
-              system = "x86_64-linux";
-              inherit overlays;
-            };
-            modules = [
-              ./hosts/shota-nixos/configuration.nix
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.users.shota = import ./hosts/shota-nixos/home-manager.nix;
-              }
-            ];
+            inherit overlays;
           };
+          modules = [
+            ./hosts/shouta/home-manager.nix
+          ];
+        };
+
+        shota-ubuntu = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            inherit overlays;
+          };
+          modules = [
+            ./hosts/shota/home-manager.nix
+          ];
         };
       };
+      nixosConfigurations = {
+        shota-nixos = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            inherit overlays;
+          };
+          modules = [
+            ./hosts/shota-nixos/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                users.shota = import ./hosts/shota-nixos/home-manager.nix;
+              };
+            }
+          ];
+        };
+      };
+    };
 }

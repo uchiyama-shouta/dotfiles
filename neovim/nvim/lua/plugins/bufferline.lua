@@ -1,7 +1,8 @@
 return {
   {
     name = "bufferline.nvim",
-    dir = "@bufferline@",
+    dir = require("config.nix_plugins").bufferline,
+    dependencies = { { name = "nvim-web-devicons", dir = require("config.nix_plugins").nvim_web_devicons } },
     event = "VeryLazy",
     keys = {
       { "<leader>bl", "<cmd>BufferLinePick<CR>", desc = "Buffer Pick" },
