@@ -1,7 +1,6 @@
 # neovim/tools.nix
 { config, pkgs, ... }:
-let np = pkgs.nodePackages;
-in {
+{
   home.packages = with pkgs; [
     # Utility
     ripgrep
@@ -19,15 +18,15 @@ in {
     taplo
 
     # Node / Web
-    np.typescript-language-server
-    np.svelte-language-server
+    typescript-language-server
+    svelte-language-server
     ##  html / css / json
-    np.vscode-langservers-extracted
+    vscode-langservers-extracted
 
-    np.yaml-language-server
-    np."@tailwindcss/language-server"
-    np.graphql-language-service-cli
-    np.prettier # HTML/CSS/MD/JSONのfmt用
+    yaml-language-server
+    tailwindcss-language-server
+    graphql-language-service-cli
+    prettier # HTML/CSS/MD/JSONのfmt用
     biome # TS/JS fmt+lint
 
     # Nix
@@ -43,12 +42,12 @@ in {
     stylua
 
     # Bash / Shell
-    np.bash-language-server
+    bash-language-server
     shellcheck
     shfmt
 
     # Docker
-    np.dockerfile-language-server-nodejs
+    dockerfile-language-server-nodejs
     docker-compose-language-service
   ];
 }
