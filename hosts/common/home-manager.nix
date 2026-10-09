@@ -11,6 +11,8 @@
   home.stateVersion = "23.05";
   home.packages = with pkgs; [
     tree
+    codex
+    htop
     rust-bin.stable.latest.default
     nodejs_22
     pnpm

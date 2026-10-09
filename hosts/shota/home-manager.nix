@@ -6,7 +6,6 @@
     homeDirectory = "/home/shota";
     packages = with pkgs; [
       nerd-fonts.hack
-      codex
     ];
   };
   programs.firefox = {

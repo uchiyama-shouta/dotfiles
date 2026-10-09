@@ -2,6 +2,8 @@
 
 NixでツールとNeovimプラグインを固定し、Home Managerでユーザー設定を管理する。
 対象はx86_64-linuxのWSL、Ubuntu、NixOS。tmuxと独自clipboard設定は提供しない。
+Codex、htop、Git、Neovim、Node/Rust、Docker CLI/Composeは共通設定で導入する。
+GUI・配信サービスはホスト固有設定とし、Windows端末のフォント設定はdotfilesの管理対象外とする。
 
 ## 検証
 
@@ -51,6 +53,32 @@ nix run --inputs-from path:. home-manager -- switch --flake path:.#shota-ubuntu
 適用後はログアウト・ログインする。NixOS新規導入では実機のhardware設定を生成し、ローカルコンソールで
 `sudo passwd shota`を実行する。SSH serverは既定で有効にしない。
 `system.stateVersion = "25.11"`と`home.stateVersion = "23.05"`は更新時にも変更しない。
+
+### WSLでのシェルとuser serviceの準備
+
+Home Managerはzshを導入・設定するが、OSアカウントのログインシェルは変更しない。
+初回switch後、導入したzshをログインシェルに設定する：
+
+```sh
+dotfiles_zsh="$(command -v zsh)"
+grep -Fxq "$dotfiles_zsh" /etc/shells || printf '%s\n' "$dotfiles_zsh" | sudo tee -a /etc/shells
+chsh -s "$dotfiles_zsh"
+```
+
+WSLのセッションを終了し、Windows側で`wsl --shutdown`して起動し直す。
+端末側でbashを明示起動している場合は、その起動設定も見直す。
+次でzshとsystemd user sessionを確認する：
+
+```sh
+getent passwd "$USER"
+ps -p $$ -o comm=
+systemctl --user status ssh-agent.service
+command -v codex htop nvim git docker
+codex --version
+```
+
+SSH鍵はWSL側にも配置し、初回の対話zshで解除する。GitHub認証はホストごとに`gh auth login`で設定する。
+Docker daemonの準備は後述の手順に従う。GUI autostartがないWSL端末でも、鍵解除はTTYから実行できる。
 
 ## SSH認証とGit署名
 
