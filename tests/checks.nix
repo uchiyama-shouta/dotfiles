@@ -65,6 +65,6 @@ in
         export HOME=$TMPDIR/home
         mkdir -p "$HOME"
         codex --version > $out
-        grep -F '0.160.1' $out
+        grep -Fx 'codex-cli ${pkgs.codex.version}' $out
       '';
 }
