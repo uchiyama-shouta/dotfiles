@@ -17,7 +17,7 @@ jobs:
           nix develop --command statix check -o errfmt . > statix.log
           cat statix.log
           test ! -s statix.log
-          for target in homeConfigurations.shouta-wsl.activationPackage homeConfigurations.shota-ubuntu.activationPackage nixosConfigurations.shota-nixos.config.system.build.toplevel; do
+          for target in homeConfigurations.shouta-wsl.activationPackage nixosConfigurations.shota-nixos.config.system.build.toplevel; do
             nix eval --no-write-lock-file ".#$target.drvPath" 2>evaluation.log
             cat evaluation.log
             if grep -E 'evaluation warning:|trace: warning:' evaluation.log; then exit 1; fi
@@ -25,6 +25,6 @@ jobs:
       - name: Build smoke checks and Home Manager generations
         run: |
           nix flake check --no-write-lock-file
-          nix build --no-link --no-write-lock-file .#homeConfigurations.shouta-wsl.activationPackage .#homeConfigurations.shota-ubuntu.activationPackage
+          nix build --no-link --no-write-lock-file .#homeConfigurations.shouta-wsl.activationPackage
       - name: Build NixOS generation
         run: nix build --no-link --no-write-lock-file .#nixosConfigurations.shota-nixos.config.system.build.toplevel

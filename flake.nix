@@ -56,16 +56,6 @@
             ./hosts/shouta/home-manager.nix
           ];
         };
-
-        shota-ubuntu = home-manager.lib.homeManagerConfiguration {
-          pkgs = import nixpkgs {
-            system = "x86_64-linux";
-            inherit overlays;
-          };
-          modules = [
-            ./hosts/shota/home-manager.nix
-          ];
-        };
       };
       nixosConfigurations = {
         shota-nixos = nixpkgs.lib.nixosSystem {

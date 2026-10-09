@@ -1,7 +1,8 @@
 # dotfiles
 
 NixでツールとNeovimプラグインを固定し、Home Managerでユーザー設定を管理する。
-対象はx86_64-linuxのWSL、Ubuntu、NixOS。tmuxと独自clipboard設定は提供しない。
+対象はx86_64-linuxのWSL、NixOS。旧PC環境のUbuntuフォールバックは廃止した。
+tmuxと独自clipboard設定は提供しない。
 Codex、htop、Git、Neovim、Node/Rust、Docker CLI/Composeは共通設定で導入する。
 GUI・配信サービスはホスト固有設定とし、Windows端末のフォント設定はdotfilesの管理対象外とする。
 
@@ -15,16 +16,15 @@ nix develop path:. --command stylua --check neovim/nvim tests
 nix develop path:. --command statix check -o errfmt .
 nix flake check path:. --no-write-lock-file
 nix build --no-link path:.#homeConfigurations.shouta-wsl.activationPackage
-nix build --no-link path:.#homeConfigurations.shota-ubuntu.activationPackage
 nix build --no-link path:.#nixosConfigurations.shota-nixos.config.system.build.toplevel
 ```
 
 `nix fmt`でNix、`nix develop --command stylua neovim/nvim tests`でLuaを整形する。
-CIは3ホストの評価Warning、ビルド、隔離したNeovim・SSH署名・シェルの実動作を検証する。
+CIは2ホストの評価Warning、ビルド、必須CLI導入、隔離したNeovim・SSH署名・シェルの実動作を検証する。
 
 ## ホスト別の導入・適用
 
-Ubuntu/WSLではNixのmulti-user環境を先に導入する。ユーザー名とHOMEは各ホスト設定に合わせる。
+WSLではNixのmulti-user環境を先に導入する。ユーザー名とHOMEはホスト設定に合わせる。
 WSLは`/etc/wsl.conf`に以下を設定し、Windows側で`wsl --shutdown`して再起動する。
 
 ```ini
@@ -32,14 +32,12 @@ WSLは`/etc/wsl.conf`に以下を設定し、Windows側で`wsl --shutdown`して
 systemd=true
 ```
 
-`systemctl --user status`が使えることを確認する。Ubuntu/WSLのlocaleはOS設定を継承する。
+`systemctl --user status`が使えることを確認する。WSLのlocaleはOS設定を継承する。
 `locale -a`で必要なlocaleを確認し、必要なら`sudo locale-gen ja_JP.UTF-8 en_US.UTF-8`を実行する。
 
 ```sh
 # WSL (user: shouta)
 home-manager switch --flake path:.#shouta-wsl
-# Ubuntu (user: shota)
-home-manager switch --flake path:.#shota-ubuntu
 # NixOS (user: shota)
 sudo nixos-rebuild switch --flake path:.#shota-nixos
 ```
@@ -47,7 +45,7 @@ sudo nixos-rebuild switch --flake path:.#shota-nixos
 Home Managerが未導入なら、同じflakeに固定された実行ファイルを使う：
 
 ```sh
-nix run --inputs-from path:. home-manager -- switch --flake path:.#shota-ubuntu
+nix run --inputs-from path:. home-manager -- switch --flake path:.#shouta-wsl
 ```
 
 適用後はログアウト・ログインする。NixOS新規導入では実機のhardware設定を生成し、ローカルコンソールで
@@ -102,7 +100,7 @@ allowed signersファイルは公開鍵から`~/.local/state/git/allowed_signers
 ## Docker
 
 NixOSではdaemonとユーザーのdockerグループ所属を宣言済み。適用後の再ログインが必要。
-Ubuntu/WSLでは[Docker公式のUbuntu導入手順](https://docs.docker.com/engine/install/ubuntu/)に従い、
+UbuntuベースのWSLでは[Docker公式のUbuntu導入手順](https://docs.docker.com/engine/install/ubuntu/)に従い、
 `docker-ce`、`docker-ce-cli`、`containerd.io`、`docker-buildx-plugin`、`docker-compose-plugin`を導入する。
 
 ```sh
@@ -114,7 +112,7 @@ docker compose version
 ```
 
 WSLはLinux側Engineを標準とし、Docker Desktopと二重管理しない。既にDesktopを使う場合は移行前に
-コンテナ・volumeを退避する。Nix側はクライアントを提供し、Ubuntu/WSLのdaemonはOS側で管理する。
+コンテナ・volumeを退避する。Nix側はクライアントを提供し、WSLのdaemonはOS側で管理する。
 dockerグループはホスト管理権限相当なので、追加対象は自分の開発ユーザーに限定する。
 
 `dc`=`docker compose`、`dcup`=起動、`dcdown`=通常停止。

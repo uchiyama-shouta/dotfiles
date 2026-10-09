@@ -1,6 +1,6 @@
 { pkgs, self }:
 let
-  cfg = self.homeConfigurations.shota-ubuntu.config;
+  cfg = self.homeConfigurations.shouta-wsl.config;
   hostConfigs = builtins.mapAttrs (_: host: host.config) self.homeConfigurations // {
     shota-nixos = self.nixosConfigurations.shota-nixos.config.home-manager.users.shota;
   };
