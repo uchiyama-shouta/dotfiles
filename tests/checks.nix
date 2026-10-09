@@ -1,6 +1,27 @@
 { pkgs, self }:
 let
   cfg = self.homeConfigurations.shota-ubuntu.config;
+  hostConfigs = builtins.mapAttrs (_: host: host.config) self.homeConfigurations // {
+    shota-nixos = self.nixosConfigurations.shota-nixos.config.home-manager.users.shota;
+  };
+  requiredTools = with pkgs; [
+    codex
+    htop
+    git
+    gh
+    zsh
+    docker-client
+    docker-compose
+  ];
+  hostToolsPresent = pkgs.lib.all (
+    host:
+    let
+      config = hostConfigs.${host};
+    in
+    pkgs.lib.assertMsg (pkgs.lib.all (
+      tool: pkgs.lib.any (installed: toString installed == toString tool) config.home.packages
+    ) requiredTools) "${host}: a required development tool is missing from home.packages"
+  ) (builtins.attrNames hostConfigs);
   tools =
     (import ../neovim/tools.nix {
       inherit pkgs;
@@ -8,6 +29,11 @@ let
     }).home.packages;
 in
 {
+  host-tools =
+    assert hostToolsPresent;
+    pkgs.runCommand "dotfiles-host-tools" { } ''
+      touch $out
+    '';
   neovim =
     pkgs.runCommand "dotfiles-neovim-smoke"
       {
