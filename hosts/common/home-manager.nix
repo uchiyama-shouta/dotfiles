@@ -5,13 +5,13 @@
     ../../neovim/tools.nix
     ../../shell
     ../../git.nix
+    ../../codex
   ];
   programs.home-manager.enable = true;
   fonts.fontconfig.enable = true;
   home.stateVersion = "23.05";
   home.packages = with pkgs; [
     tree
-    codex
     htop
     rust-bin.stable.latest.default
     nodejs_22

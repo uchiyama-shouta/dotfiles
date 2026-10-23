@@ -6,8 +6,15 @@ tmuxと独自clipboard設定は提供しない。
 Codex、htop、Git、Neovim、Node/Rust、Docker CLI/Composeは共通設定で導入する。
 GUI・配信サービスはホスト固有設定とし、Windows端末のフォント設定はdotfilesの管理対象外とする。
 
-Codex CLI のバージョンは Nix で管理する。`~/.codex/config.toml` は Codex 自身に管理を任せ、
-Home Manager では生成・上書きしない。キー設定は `/keymap`、ステータス欄は `/statusline` で変更する。
+Codex CLI と `~/.codex/config.toml` 全体を Nix / Home Manager で管理する。
+共通設定は `codex/default.nix`、ホスト固有のプロジェクト信頼設定は各ホストの
+`home-manager.nix` に記述する。既存設定とのマージ処理は行わない。
+認証情報や会話履歴は dotfiles に含めない。
+
+入力欄は Enter で改行、Alt+Enter で送信し、ステータス欄にコンテキスト残量を表示する。
+設定変更は Nix ファイルを編集して Home Manager を適用し、Codex を再起動する。
+生成された設定は読み取り専用なので、Codex 内からの設定保存は失敗する場合がある。
+Windows Terminal の Alt+Enter が端末操作と競合する場合は、端末側の割り当て解除が必要。
 
 ## 検証
 
