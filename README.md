@@ -6,14 +6,19 @@ tmuxと独自clipboard設定は提供しない。
 Codex、htop、Git、Neovim、Node/Rust、Docker CLI/Composeは共通設定で導入する。
 GUI・配信サービスはホスト固有設定とし、Windows端末のフォント設定はdotfilesの管理対象外とする。
 
-Codex CLI と `~/.codex/config.toml` 全体を Nix / Home Manager で管理する。
-共通設定は `codex/default.nix`、ホスト固有のプロジェクト信頼設定は各ホストの
-`home-manager.nix` に記述する。既存設定とのマージ処理は行わない。
-認証情報や会話履歴は dotfiles に含めない。
+Codex CLI と共通プロファイル `~/.codex/dotfiles.config.toml` を Nix / Home Manager で管理する。
+共通設定は `codex/default.nix` に記述し、対話 zsh の `codex` は実行時に `--profile dotfiles` を補う。
+明示した `--profile` / `-p` と、`login`・`doctor` などの管理コマンドはそのまま実行する。
+スクリプトから使う場合は `codex --profile dotfiles` を指定する。
+
+`~/.codex/config.toml` は各環境で書き込み可能なまま保持し、プロジェクトの信頼設定などを
+Codex 自身に保存させる。プロジェクト名・パス・信頼設定・認証情報・会話履歴は公開しない。
+以前の Home Manager が生成した読み取り専用 config.toml は、適用時に内容を変えず
+書き込み可能な通常ファイルへ移行する。既存設定とのマージ処理は行わない。
 
 入力欄は Enter で改行、Alt+Enter で送信し、ステータス欄にコンテキスト残量を表示する。
-設定変更は Nix ファイルを編集して Home Manager を適用し、Codex を再起動する。
-生成された設定は読み取り専用なので、Codex 内からの設定保存は失敗する場合がある。
+共通プロファイルの変更は Nix ファイルを編集して Home Manager を適用し、Codex を再起動する。
+プロファイルに固定した項目はローカル設定より優先される。TUI からのプロファイルへの保存はできない。
 Windows Terminal の Alt+Enter が端末操作と競合する場合は、端末側の割り当て解除が必要。
 
 ## 検証
