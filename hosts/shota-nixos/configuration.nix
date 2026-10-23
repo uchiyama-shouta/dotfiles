@@ -52,7 +52,17 @@
     type = "fcitx5";
 
     fcitx5.addons = with pkgs; [
-      fcitx5-mozc
+      # Qt 6.12 rejects the leading :: in Mozc's custom widget class.
+      # https://github.com/google/mozc/issues/1594
+      (fcitx5-mozc.override {
+        mozc = pkgs.mozc.overrideAttrs (old: {
+          postPatch = (old.postPatch or "") + ''
+            substituteInPlace src/gui/dictionary_tool/dictionary_tool.ui \
+              --replace-fail '::mozc::gui::DictionaryContentTableWidget' \
+                'mozc::gui::DictionaryContentTableWidget'
+          '';
+        });
+      })
       fcitx5-gtk
     ];
   };
