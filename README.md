@@ -6,6 +6,9 @@ tmuxと独自clipboard設定は提供しない。
 Codex、htop、Git、Neovim、Node/Rust、Docker CLI/Composeは共通設定で導入する。
 GUI・配信サービスはホスト固有設定とし、Windows端末のフォント設定はdotfilesの管理対象外とする。
 
+Codex CLI のバージョンは Nix で管理する。`~/.codex/config.toml` は Codex 自身に管理を任せ、
+Home Manager では生成・上書きしない。キー設定は `/keymap`、ステータス欄は `/statusline` で変更する。
+
 ## 検証
 
 作業中の新規ファイルも評価するため、以下は`path:.`を使用する。
