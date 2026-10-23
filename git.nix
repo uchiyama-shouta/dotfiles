@@ -79,15 +79,13 @@
     ssh = {
       enable = true;
       enableDefaultConfig = false;
-      matchBlocks = {
+      settings = {
         "github.com" = {
-          hostname = "github.com";
-          user = "git";
-          identitiesOnly = true;
-          identityFile = "~/.ssh/id_ed25519_github";
-          extraOptions = {
-            AddKeysToAgent = "yes";
-          };
+          HostName = "github.com";
+          User = "git";
+          IdentitiesOnly = true;
+          IdentityFile = "~/.ssh/id_ed25519_github";
+          AddKeysToAgent = "yes";
         };
       };
     };

@@ -6,15 +6,21 @@ tmuxと独自clipboard設定は提供しない。
 Codex、htop、Git、Neovim、Node/Rust、Docker CLI/Composeは共通設定で導入する。
 GUI・配信サービスはホスト固有設定とし、Windows端末のフォント設定はdotfilesの管理対象外とする。
 
-Codex CLI と `~/.codex/config.toml` 全体を Nix / Home Manager で管理する。
-共通設定は `codex/default.nix`、ホスト固有のプロジェクト信頼設定は各ホストの
-`home-manager.nix` に記述する。既存設定とのマージ処理は行わない。
-認証情報や会話履歴は dotfiles に含めない。
+Codex CLI と共通設定を `codex/default.nix` の `programs.codex` で管理する。
+`mutableSettings = true` により、Home Manager 適用時に宣言した設定を
+書き込み可能な `~/.codex/config.toml` へ反映する。通常の `codex` コマンドで利用できる。
+Nix に宣言していないプロジェクトの信頼設定などは保持し、Codex 自身に保存させる。
+プロジェクト名・パス・信頼設定・認証情報・会話履歴は公開設定に含めない。
 
 入力欄は Enter で改行、Alt+Enter で送信し、ステータス欄にコンテキスト残量を表示する。
-設定変更は Nix ファイルを編集して Home Manager を適用し、Codex を再起動する。
-生成された設定は読み取り専用なので、Codex 内からの設定保存は失敗する場合がある。
+共通設定の変更は Nix ファイルを編集して Home Manager を適用し、Codex を再起動する。
+TUI で変更した宣言済みの項目は、次の適用で Nix の値に戻る。
+Nix の宣言から項目を外しても配置先の値は自動削除されない。配置先のコメントや整形は保持されない。
 Windows Terminal の Alt+Enter が端末操作と競合する場合は、端末側の割り当て解除が必要。
+
+読み取り専用 config.toml から初めて移行する場合は、適用前にリポジトリ外へバックアップし、
+その内容を保持した通常ファイルに戻しておく。ローカルの信頼設定を失わずに移行できる。
+以前の対話 zsh の起動関数を読み込んでいる場合は、適用後に新しいシェルを起動する。
 
 ## 検証
 

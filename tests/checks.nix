@@ -1,6 +1,13 @@
 { pkgs, self }:
 let
   cfg = self.homeConfigurations.shouta-wsl.config;
+  codexMutableActivation = pkgs.writeShellScript "dotfiles-codex-activation" ''
+    set -euo pipefail
+    ${cfg.lib.bash.initHomeManagerLib}
+    ${pkgs.lib.replaceStrings [ cfg.home.homeDirectory ] [ "@TEST_HOME@" ]
+      cfg.home.activation.codexMutableSettings.data
+    }
+  '';
   hostConfigs = builtins.mapAttrs (_: host: host.config) self.homeConfigurations // {
     shota-nixos = self.nixosConfigurations.shota-nixos.config.home-manager.users.shota;
   };
@@ -92,5 +99,51 @@ in
         mkdir -p "$HOME"
         codex --version > $out
         grep -Fx 'codex-cli ${pkgs.codex.version}' $out
+      '';
+  codex-settings =
+    pkgs.runCommand "dotfiles-codex-mutable-settings"
+      {
+        nativeBuildInputs = with pkgs; [
+          bash
+          coreutils
+          gnused
+          jaq
+        ];
+      }
+      ''
+        export HOME=$TMPDIR/home
+        mkdir -p "$HOME/.codex"
+        sed "s|@TEST_HOME@|$HOME|g" ${codexMutableActivation} > "$TMPDIR/activate"
+        cat > "$HOME/.codex/config.toml" <<'EOF'
+        model = "local-model"
+        [projects."/tmp/example-project"]
+        trust_level = "trusted"
+        [tui.model_availability_nux]
+        example = 7
+        EOF
+        chmod 600 "$HOME/.codex/config.toml"
+        bash "$TMPDIR/activate"
+        test ! -L "$HOME/.codex/config.toml"
+        test -w "$HOME/.codex/config.toml"
+        test "$(stat -c %a "$HOME/.codex/config.toml")" = 600
+        jaq --from toml -e '
+          .model == "${cfg.programs.codex.settings.model}"
+          and .projects["/tmp/example-project"].trust_level == "trusted"
+          and .tui.model_availability_nux.example == 7
+          and .tui.keymap.composer.submit == ["alt-enter"]
+          and .tui.keymap.editor.insert_newline == ["enter"]
+          and (.tui.status_line | index("context-remaining")) != null
+        ' "$HOME/.codex/config.toml"
+        cp "$HOME/.codex/config.toml" "$TMPDIR/after-first-activation"
+        bash "$TMPDIR/activate"
+        cmp "$HOME/.codex/config.toml" "$TMPDIR/after-first-activation"
+        printf 'model = [\n' > "$HOME/.codex/config.toml"
+        cp "$HOME/.codex/config.toml" "$TMPDIR/invalid-config"
+        if bash "$TMPDIR/activate"; then
+          echo 'Activation unexpectedly accepted invalid TOML' >&2
+          exit 1
+        fi
+        cmp "$HOME/.codex/config.toml" "$TMPDIR/invalid-config"
+        touch $out
       '';
 }

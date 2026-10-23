@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   imports = [ ./hardware-configuration.nix ];
@@ -52,7 +52,17 @@
     type = "fcitx5";
 
     fcitx5.addons = with pkgs; [
-      fcitx5-mozc
+      # Qt 6.12 rejects the leading :: in Mozc's custom widget class.
+      # https://github.com/google/mozc/issues/1594
+      (fcitx5-mozc.override {
+        mozc = pkgs.mozc.overrideAttrs (old: {
+          postPatch = (old.postPatch or "") + ''
+            substituteInPlace src/gui/dictionary_tool/dictionary_tool.ui \
+              --replace-fail '::mozc::gui::DictionaryContentTableWidget' \
+                'mozc::gui::DictionaryContentTableWidget'
+          '';
+        });
+      })
       fcitx5-gtk
     ];
   };
@@ -65,6 +75,18 @@
     '';
   };
   services = {
+    # Sunshine still sets the obsolete Avahi publish options in this nixpkgs.
+    avahi = {
+      publish = {
+        enable = lib.mkForce null;
+        userServices = lib.mkForce null;
+      };
+      settings.publish = {
+        disable-publishing = false;
+        disable-user-service-publishing = false;
+        publish-addresses = true;
+      };
+    };
     xserver.enable = true;
     displayManager.sddm.enable = true;
     desktopManager.plasma6.enable = true;
