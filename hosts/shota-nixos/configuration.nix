@@ -97,6 +97,8 @@
       capSysAdmin = true;
       # DRM/KMS capture needs CAP_SYS_ADMIN; Sunshine enables uinput itself.
       settings = {
+        # Avoid automatic portal probing blocking startup on KDE.
+        capture = "kms";
         locale = "ja";
         origin_web_ui_allowed = "pc";
         upnp = "disabled";
