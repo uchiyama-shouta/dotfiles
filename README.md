@@ -3,7 +3,7 @@
 NixでツールとNeovimプラグインを固定し、Home Managerでユーザー設定を管理する。
 対象はx86_64-linuxのWSL、NixOS。旧PC環境のUbuntuフォールバックは廃止した。
 tmuxと独自clipboard設定は提供しない。
-Codex、htop、Git、Neovim、Node/Rust、Docker CLI/Composeは共通設定で導入する。
+Codex、OpenCode、htop、Git、Neovim、Node/Rust、Docker CLI/Composeは共通設定で導入する。
 GUI・配信サービスはホスト固有設定とし、Windows端末のフォント設定はdotfilesの管理対象外とする。
 
 Codex CLI と共通設定を `codex/default.nix` の `programs.codex` で管理する。
@@ -21,6 +21,17 @@ Windows Terminal の Alt+Enter が端末操作と競合する場合は、端末�
 読み取り専用 config.toml から初めて移行する場合は、適用前にリポジトリ外へバックアップし、
 その内容を保持した通常ファイルに戻しておく。ローカルの信頼設定を失わずに移行できる。
 以前の対話 zsh の起動関数を読み込んでいる場合は、適用後に新しいシェルを起動する。
+
+OpenCode と共通設定を `opencode/default.nix` の `programs.opencode` で管理する。
+パッケージはflake.lockで固定したnixpkgsの`opencode`を使い、Home Managerのモジュールが
+WSL・NixOSの共通設定でこのOpenCode v2を導入する。バージョンはロックファイルで再現できる。
+`mutableSettings = true`にして、モデル・プロバイダー・テーマ・認証をNixで固定しない。
+OpenCode自身に`~/.config/opencode`の設定を保存させ、必要になった時点で宣言へ移す。
+
+`opencode`コマンドで起動する。モデルとプロバイダーの接続は初回起動後に
+`opencode auth login`で設定する。認証情報はHome Managerの管理外に保存され、
+`opencode models`で利用可能なモデルを確認できる。`opencode upgrade`はflakeで固定した
+バージョンと競合するため使わず、バージョン更新はflake.lockのnixpkgs更新で行う。
 
 ## 検証
 
@@ -87,8 +98,9 @@ WSLのセッションを終了し、Windows側で`wsl --shutdown`して起動し
 getent passwd "$USER"
 ps -p $$ -o comm=
 systemctl --user status ssh-agent.service
-command -v codex htop nvim git docker
+command -v codex opencode htop nvim git docker
 codex --version
+opencode --version
 ```
 
 SSH鍵はWSL側にも配置し、初回の対話zshで解除する。GitHub認証はホストごとに`gh auth login`で設定する。

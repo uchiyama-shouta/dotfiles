@@ -13,6 +13,7 @@ let
   };
   requiredTools = with pkgs; [
     codex
+    opencode
     htop
     git
     gh
@@ -99,6 +100,17 @@ in
         mkdir -p "$HOME"
         codex --version > $out
         grep -Fx 'codex-cli ${pkgs.codex.version}' $out
+      '';
+  opencode =
+    pkgs.runCommand "dotfiles-opencode-smoke"
+      {
+        nativeBuildInputs = [ pkgs.opencode ];
+      }
+      ''
+        export HOME=$TMPDIR/home
+        mkdir -p "$HOME"
+        opencode --version > $out
+        grep -Fx "opencode v${pkgs.opencode.version}" $out
       '';
   codex-settings =
     pkgs.runCommand "dotfiles-codex-mutable-settings"
