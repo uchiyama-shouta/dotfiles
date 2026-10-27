@@ -112,6 +112,38 @@ in
         opencode --version > $out
         grep -Fx "opencode v${pkgs.opencode.version}" $out
       '';
+  opencode-permissions =
+    let
+      file = cfg.xdg.configFile."opencode/home-manager.json".source;
+    in
+    assert pkgs.lib.assertMsg
+      (pkgs.lib.hasSuffix "opencode/home-manager.json" cfg.home.sessionVariables.OPENCODE_CONFIG)
+      "OpenCode mutable settings must be wired through OPENCODE_CONFIG";
+    pkgs.runCommand "dotfiles-opencode-permission-policy"
+      {
+        nativeBuildInputs = [ pkgs.jaq ];
+      }
+      ''
+        jaq -e 'keys == ["$schema", "permission"]' ${file}
+        jaq -e '
+          .permission.edit == "allow"
+          and .permission.external_directory == "ask"
+          and .permission.webfetch == "ask"
+          and .permission.read["*"] == "allow"
+          and .permission.read["*.env"] == "ask"
+          and .permission.read["*.env.*"] == "ask"
+          and .permission.read["*.env.example"] == "allow"
+        ' ${file}
+        jaq -e '
+          .permission.bash["*"] == "ask"
+          and .permission.bash["home-manager switch*"] == "deny"
+          and .permission.bash["nixos-rebuild switch*"] == "deny"
+          and .permission.bash["sudo*"] == "deny"
+        ' ${file}
+        jaq -e '(.permission.bash | keys[0] == "*" and (keys | length) == 4)' ${file}
+        jaq -e '(.permission.read | keys[0] == "*" and (keys | length) == 4)' ${file}
+        touch $out
+      '';
   codex-settings =
     pkgs.runCommand "dotfiles-codex-mutable-settings"
       {

@@ -26,12 +26,31 @@ OpenCode と共通設定を `opencode/default.nix` の `programs.opencode` で�
 パッケージはflake.lockで固定したnixpkgsの`opencode`を使い、Home Managerのモジュールが
 WSL・NixOSの共通設定でこのOpenCode v2を導入する。バージョンはロックファイルで再現できる。
 `mutableSettings = true`にして、モデル・プロバイダー・テーマ・認証をNixで固定しない。
-OpenCode自身に`~/.config/opencode`の設定を保存させ、必要になった時点で宣言へ移す。
+モデル・プロバイダー・テーマはOpenCode自身の保存先(`~/.config/opencode/`以下の
+書き込み可能なファイル)に保持され、TUIでの変更も保持される。
+宣言した共通設定は`OPENCODE_CONFIG`で読み込まれるレイヤに書き出され、
+ユーザーのグローバル設定より優先され、プロジェクト設定には優先されない。
 
 `opencode`コマンドで起動する。モデルとプロバイダーの接続は初回起動後に
 `opencode auth login`で設定する。認証情報はHome Managerの管理外に保存され、
 `opencode models`で利用可能なモデルを確認できる。`opencode upgrade`はflakeで固定した
 バージョンと競合するため使わず、バージョン更新はflake.lockのnixpkgs更新で行う。
+
+権限ポリシーは`settings.permission`で宣言し、Home Manager生成時に
+パッケージ同梱の設定スキーマ(`validateFiles.config`)で検証される。
+リポジトリ内の閲覧・編集は許可し、`.env`系ファイルの読み取りは確認を求める。
+shellコマンドは、gitの読み取り操作を含めて複合コマンドやオプション付き実行が
+確認から漏れないよう、すべて`ask`とし自動許可を置かない。
+`sudo`、`nixos-rebuild switch`、`home-manager switch`は`deny`とし、
+エージェントは実行できない。作業ディレクトリ外のアクセスとURL取得
+(`webfetch`)も`ask`とする。
+
+この権限はコマンド文字列のパターンマッチであってOSレベルの拘束力はない。
+複合コマンドや`sh -c`経由の実行で回避される可能性があり、秘密情報の完全な保護や
+ネットワーク通信の分離を保証しない。`--auto`起動時は`deny`以外の`ask`を
+自動承認する。プロジェクトの`opencode.json`はこの共通設定より優先されるため、
+権限を緩める変更はプロジェクト側でも行わないこと。OSレベルの隔離
+(bubblewrapラッパー)は未実装であり、別の段階で設計・検証する。
 
 ## 検証
 
