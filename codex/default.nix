@@ -23,4 +23,5 @@
       };
     };
   };
+  home.file.".codex/AGENTS.md".source = ../agents/AGENTS.md;
 }

@@ -37,6 +37,15 @@ let
     }).home.packages;
 in
 {
+  agent-instructions = pkgs.runCommand "dotfiles-agent-instructions" { } (
+    pkgs.lib.concatMapStringsSep "\n" (host: ''
+      cmp ${hostConfigs.${host}.home-files}/.codex/AGENTS.md ${../agents/AGENTS.md}
+      cmp ${hostConfigs.${host}.home-files}/.config/opencode/AGENTS.md ${../agents/AGENTS.md}
+    '') (builtins.attrNames hostConfigs)
+    + ''
+      touch $out
+    ''
+  );
   host-tools =
     assert hostToolsPresent;
     pkgs.runCommand "dotfiles-host-tools" { } ''
