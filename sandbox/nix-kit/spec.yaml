@@ -1,0 +1,34 @@
+schemaVersion: "2"
+kind: mixin
+name: nix-dev
+permissions:
+  network:
+    allow:
+      - releases.nixos.org:443
+      - cache.nixos.org:443
+    deny:
+      - aiplatform.googleapis.com:443
+      - api.anthropic.com:443
+      - api.business.githubcopilot.com:443
+      - api.enterprise.githubcopilot.com:443
+      - api.githubcopilot.com:443
+      - api.groq.com:443
+      - api.individual.githubcopilot.com:443
+      - api.openai.com:443
+      - api.x.ai:443
+      - auth.openai.com:443
+      - chatgpt.com:443
+      - claude.ai:443
+      - console.anthropic.com:443
+      - copilot.github.com:443
+      - generativelanguage.googleapis.com:443
+      - oauth2.googleapis.com:443
+      - openai.com:443
+      - openrouter.ai:443
+      - vertexai.googleapis.com:443
+setup:
+  install:
+    - command: mkdir -p /nix && chown 1000:1000 /nix
+      user: "0"
+    - command: sh /home/agent/nix-dev-install.sh
+      user: "1000"

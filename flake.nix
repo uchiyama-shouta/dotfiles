@@ -9,6 +9,7 @@
     };
     flake-utils.url = "github:numtide/flake-utils";
     rust-overlay.url = "github:oxalica/rust-overlay";
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   outputs =
@@ -18,6 +19,7 @@
       home-manager,
       flake-utils,
       rust-overlay,
+      llm-agents,
       ...
     }:
     let
@@ -48,6 +50,7 @@
     // {
       homeConfigurations = {
         shouta-wsl = home-manager.lib.homeManagerConfiguration {
+          extraSpecialArgs = { inherit llm-agents; };
           pkgs = import nixpkgs {
             system = "x86_64-linux";
             inherit overlays;
