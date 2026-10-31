@@ -52,6 +52,58 @@ shellコマンドは、gitの読み取り操作を含めて複合コマンドや
 権限を緩める変更はプロジェクト側でも行わないこと。OSレベルの隔離
 (bubblewrapラッパー)は未実装であり、別の段階で設計・検証する。
 
+### WSL の Docker Sandboxes（検証中）
+
+WSL 向け Home Manager に `sbx` を導入し、Nix 開発環境用 Kit を
+`~/.config/sbx/nix-kit` に配置する。Kit は Nix 2.35.4 の配布物をハッシュ検証して
+Sandbox 内に導入する。ホストのプロジェクトを共有せず、共有 Skills を無効にして作成する：
+
+```sh
+sbx settings set ssh.agentForwardingEnabled false
+sbx daemon restart
+sbx policy init deny-all
+sbx create --name my-sandbox --skills off --kit ~/.config/sbx/nix-kit opencode
+```
+
+`policy init` は未初期化の場合の一度限りの操作。OpenCode Kit は `deny-all` の上に
+複数の通信先を許可する。Nix Kit は未選択のモデルプロバイダーを明示的に拒否する。
+`sbx policy ls my-sandbox --wide --type network` で実際のルールを確認する。
+別のプロバイダーを使う場合は Kit の拒否ルールを見直し、Sandbox を作り直す。
+`sbx run opencode` は作業ディレクトリを既定で共有するため、上記の作成手順を使う。
+
+非公開リポジトリには、対象リポジトリに限定した GitHub の fine-grained token を使う。
+`Contents: read` と `Issues: read` を付け、書き込み権限は付けない。ホストの個人用
+書き込み認証を渡さず、Sandbox に限定して登録する。token は対話入力し、コマンド引数・
+シェル履歴・設定ファイルに書かない：
+
+```sh
+sbx secret set github --sandbox my-sandbox
+sbx exec my-sandbox sh -c 'cd /home/agent/workspace && git -c credential.helper="!gh auth git-credential" clone https://github.com/OWNER/REPOSITORY.git project'
+sbx exec my-sandbox gh issue view ISSUE_NUMBER --repo OWNER/REPOSITORY
+sbx exec -it my-sandbox sh /home/agent/nix-opencode.sh /home/agent/workspace/project
+```
+
+GitHub の認証は proxy が扱う。Sandbox 内でブランチとコミットを作ったら、例えば次の
+ように bundle にまとめてホストへ取り出す。`BRANCH` は Sandbox 内で作成したブランチ名、
+`SANDBOX` は Sandbox 名を指定する。bundle にはブランチの Git 履歴が含まれるため、
+ホスト上でも非公開リポジトリと同様に扱う：
+
+```sh
+sbx exec SANDBOX git -C /home/agent/workspace/project bundle create /home/agent/workspace/result.bundle BRANCH
+sbx cp SANDBOX:/home/agent/workspace/result.bundle ./result.bundle
+```
+
+ホスト側の隔離したレビュー用 clone で bundle を `git fetch` し、差分とテストを確認してから
+ホストの認証で作業ブランチを push・PR 作成する。ホストの元の作業ツリーに直接 fetch する必要はない。
+読み取り専用 token の Push は `--dry-run` で 403 を確認したが、GitHub の個別設定や token の
+権限は実際に使用するものを確認する。Sandbox に入るコードや Issue は使用するモデルへ送信される。
+
+これは実験段階の構成。OpenCode の無料モデルは利用上限に達する場合がある。今回の検証では
+Sandbox 内の Playwright 用 Chromium と crates.io の取得がネットワークポリシーで拒否されたため、
+ブラウザテストはホスト側で実施した。WSL 上の Tauri は EGL エラーで描画を確認できていない。
+Kit による Nix 環境の作成・非公開リポジトリと Issue の読み取り・コミット回収は検証済みだが、
+複数 Issue の並列実行やプロバイダー変更後の構成は未検証。
+
 ## 検証
 
 作業中の新規ファイルも評価するため、以下は`path:.`を使用する。
