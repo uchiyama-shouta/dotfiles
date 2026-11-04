@@ -66,7 +66,8 @@ sbx create --name my-sandbox --skills off --kit ~/.config/sbx/nix-kit opencode
 ```
 
 `policy init` は未初期化の場合の一度限りの操作。OpenCode Kit は `deny-all` の上に
-複数の通信先を許可する。Nix Kit は未選択のモデルプロバイダーを明示的に拒否する。
+複数の通信先を許可する。Nix Kit はNixの配布・キャッシュとOpenRouterを許可し、
+未選択のモデルプロバイダーを明示的に拒否する。
 `sbx policy ls my-sandbox --wide --type network` で実際のルールを確認する。
 別のプロバイダーを使う場合は Kit の拒否ルールを見直し、Sandbox を作り直す。
 `sbx run opencode` は作業ディレクトリを既定で共有するため、上記の作成手順を使う。
@@ -81,6 +82,17 @@ sbx secret set github --sandbox my-sandbox
 sbx exec my-sandbox sh -c 'cd /home/agent/workspace && git -c credential.helper="!gh auth git-credential" clone https://github.com/OWNER/REPOSITORY.git project'
 sbx exec my-sandbox gh issue view ISSUE_NUMBER --repo OWNER/REPOSITORY
 sbx exec -it my-sandbox sh /home/agent/nix-opencode.sh /home/agent/workspace/project
+```
+
+普段のOpenRouter + Gemini実装では、次のようにSandbox内のプロジェクトflakeを
+`nix develop`へ引き継いでOpenCodeを起動する。プロジェクトのdevShellに
+`opencode`が含まれない場合でも、Kitイメージに含まれるOpenCodeを利用する。
+
+```sh
+sbx exec -it my-sandbox sh /home/agent/nix-opencode.sh \
+  /home/agent/workspace/project run \
+  --model openrouter/google/gemini-3.7-flash \
+  "Issueの実装内容"
 ```
 
 GitHub の認証は proxy が扱う。Sandbox 内でブランチとコミットを作ったら、例えば次の
