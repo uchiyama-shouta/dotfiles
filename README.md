@@ -62,11 +62,16 @@ Sandbox 内に導入する。ホストのプロジェクトを共有せず、共
 sbx settings set ssh.agentForwardingEnabled false
 sbx daemon restart
 sbx policy init deny-all
-sbx create --name my-sandbox --skills off --kit ~/.config/sbx/nix-kit opencode
+kit_dir=$(mktemp -d)
+cp -RL ~/.config/sbx/nix-kit/. "$kit_dir/"
+sbx create --name my-sandbox --skills off --kit "$kit_dir" opencode
 ```
 
+Home Manager が配置した Kit はシンボリックリンクを含むため、作成時に書き込み可能な
+一時ディレクトリにコピーする。`kit_dir` は作成が完了した後に削除できる。
 `policy init` は未初期化の場合の一度限りの操作。OpenCode Kit は `deny-all` の上に
-複数の通信先を許可する。Nix Kit は未選択のモデルプロバイダーを明示的に拒否する。
+複数の通信先を許可する。OpenCode Kit はOpenRouterを含む通信先を許可する。
+Nix Kit はNixの配布・キャッシュを許可し、未選択のモデルプロバイダーを明示的に拒否する。
 `sbx policy ls my-sandbox --wide --type network` で実際のルールを確認する。
 別のプロバイダーを使う場合は Kit の拒否ルールを見直し、Sandbox を作り直す。
 `sbx run opencode` は作業ディレクトリを既定で共有するため、上記の作成手順を使う。
@@ -78,9 +83,22 @@ sbx create --name my-sandbox --skills off --kit ~/.config/sbx/nix-kit opencode
 
 ```sh
 sbx secret set github --sandbox my-sandbox
+sbx secret set openrouter --sandbox my-sandbox
 sbx exec my-sandbox sh -c 'cd /home/agent/workspace && git -c credential.helper="!gh auth git-credential" clone https://github.com/OWNER/REPOSITORY.git project'
 sbx exec my-sandbox gh issue view ISSUE_NUMBER --repo OWNER/REPOSITORY
 sbx exec -it my-sandbox sh /home/agent/nix-opencode.sh /home/agent/workspace/project
+```
+
+OpenRouter を使う場合は、上記の対話入力で API key も Sandbox に限定して登録する。
+次のようにSandbox内のプロジェクトflakeを
+`nix develop`へ引き継いでOpenCodeを起動する。プロジェクトのdevShellに
+`opencode`が含まれない場合でも、Kitイメージに含まれるOpenCodeを利用する。
+
+```sh
+sbx exec -it my-sandbox sh /home/agent/nix-opencode.sh \
+  /home/agent/workspace/project run \
+  --model openrouter/deepseek/deepseek-v4.1-flash-1017 \
+  "Issueの実装内容"
 ```
 
 GitHub の認証は proxy が扱う。Sandbox 内でブランチとコミットを作ったら、例えば次の
@@ -95,12 +113,18 @@ sbx cp SANDBOX:/home/agent/workspace/result.bundle ./result.bundle
 
 ホスト側の隔離したレビュー用 clone で bundle を `git fetch` し、差分とテストを確認してから
 ホストの認証で作業ブランチを push・PR 作成する。ホストの元の作業ツリーに直接 fetch する必要はない。
+bundle を直接 clone する場合は、既定の HEAD が含まれないことがあるため、
+`git clone --branch BRANCH ./result.bundle review-clone` のようにブランチを指定する。
 読み取り専用 token の Push は `--dry-run` で 403 を確認したが、GitHub の個別設定や token の
 権限は実際に使用するものを確認する。Sandbox に入るコードや Issue は使用するモデルへ送信される。
 
-これは実験段階の構成。OpenCode の無料モデルは利用上限に達する場合がある。今回の検証では
+これは実験段階の構成。OpenCode の無料モデルは利用上限に達する場合がある。以前の検証では
 Sandbox 内の Playwright 用 Chromium と crates.io の取得がネットワークポリシーで拒否されたため、
-ブラウザテストはホスト側で実施した。WSL 上の Tauri は EGL エラーで描画を確認できていない。
+ブラウザテストはホスト側で実施した。検証用 `opencode-arona-readonly` には後から
+`index.crates.io`、`static.crates.io`、`cdn.playwright.dev` の許可を個別に追加している。
+これらは Kit に含まれず、新規 Sandbox には自動適用されない。各ホストへのHTTPS接続は
+確認済みだが、依存関係やブラウザのダウンロード全体は再検証していない。
+WSL 上の Tauri は EGL エラーで描画を確認できていない。
 Kit による Nix 環境の作成・非公開リポジトリと Issue の読み取り・コミット回収は検証済みだが、
 複数 Issue の並列実行やプロバイダー変更後の構成は未検証。
 

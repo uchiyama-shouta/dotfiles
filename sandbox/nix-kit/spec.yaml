@@ -24,7 +24,6 @@ permissions:
       - generativelanguage.googleapis.com:443
       - oauth2.googleapis.com:443
       - openai.com:443
-      - openrouter.ai:443
       - vertexai.googleapis.com:443
 setup:
   install:
