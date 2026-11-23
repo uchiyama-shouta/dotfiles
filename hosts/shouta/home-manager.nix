@@ -1,14 +1,12 @@
-{ pkgs, llm-agents, ... }:
+{ pkgs, ... }:
 {
-  imports = [ ../common/home-manager.nix ];
-  xdg.configFile."sbx/nix-kit" = {
-    source = ../../sandbox/nix-kit;
-    recursive = true;
-  };
+  imports = [
+    ../common/home-manager.nix
+    ../../sandbox
+  ];
   home = {
     username = "shouta";
     homeDirectory = "/home/shouta";
-    packages = [ llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.docker-sbx ];
   };
   nix = {
     enable = true;
