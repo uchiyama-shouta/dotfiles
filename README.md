@@ -58,19 +58,21 @@ WSL 向け Home Manager に `sbx` を導入し、Nix 開発環境用 Kit を
 `~/.config/sbx/nix-kit` に配置する。Kit は Nix 2.35.4 の配布物をハッシュ検証して
 Sandbox 内に導入する。ホストのプロジェクトを共有せず、共有 Skills を無効にして作成する：
 
+初回のホスト設定（設定を変更した場合は daemon の再起動が必要）：
+
 ```sh
 sbx settings set ssh.agentForwardingEnabled false
 sbx daemon restart
 sbx policy init deny-all
-kit_dir=$(mktemp -d)
-cp -RL ~/.config/sbx/nix-kit/. "$kit_dir/"
-sbx create --name my-sandbox --skills off --kit "$kit_dir" opencode
 ```
 
-Home Manager が配置した Kit はシンボリックリンクを含むため、作成時に書き込み可能な
-一時ディレクトリにコピーする。`kit_dir` は作成が完了した後に削除できる。
+以後の作成は `sandbox-create my-sandbox` で実行する。リポジトリも準備する場合は、
+global secret の登録後に `sandbox-create my-sandbox OWNER/REPOSITORY` と指定すると
+Sandbox 内の `/home/agent/workspace/project` に clone する。SSH Agent 転送と全体の
+deny-all を確認し、ホストの workspace を共有せずに作成する。Kit の一時コピーは
+コマンドが作成・削除する。既存の全体ポリシーに追加された許可ルールは別途確認する。
 `policy init` は未初期化の場合の一度限りの操作。OpenCode Kit は `deny-all` の上に
-複数の通信先を許可する。OpenCode Kit はOpenRouterを含む通信先を許可する。
+OpenRouterを含む複数の通信先を許可する。
 Nix Kit はNixの配布・キャッシュを許可し、未選択のモデルプロバイダーを明示的に拒否する。
 `sbx policy ls my-sandbox --wide --type network` で実際のルールを確認する。
 別のプロバイダーを使う場合は Kit の拒否ルールを見直し、Sandbox を作り直す。
@@ -78,43 +80,54 @@ Nix Kit はNixの配布・キャッシュを許可し、未選択のモデルプ
 
 非公開リポジトリには、対象リポジトリに限定した GitHub の fine-grained token を使う。
 `Contents: read` と `Issues: read` を付け、書き込み権限は付けない。ホストの個人用
-書き込み認証を渡さず、Sandbox に限定して登録する。token は対話入力し、コマンド引数・
-シェル履歴・設定ファイルに書かない：
+書き込み認証を渡さない。読み取り用 token と OpenRouter API key は、初回に一度だけ
+global secret として対話入力する。コマンド引数・シェル履歴・設定ファイルには書かない：
 
 ```sh
-sbx secret set github --sandbox my-sandbox
-sbx secret set openrouter --sandbox my-sandbox
-sbx exec my-sandbox sh -c 'cd /home/agent/workspace && git -c credential.helper="!gh auth git-credential" clone https://github.com/OWNER/REPOSITORY.git project'
-sbx exec my-sandbox gh issue view ISSUE_NUMBER --repo OWNER/REPOSITORY
-sbx exec -it my-sandbox sh /home/agent/nix-opencode.sh /home/agent/workspace/project
+sbx secret set github
+sbx secret set openrouter
 ```
 
-OpenRouter を使う場合は、上記の対話入力で API key も Sandbox に限定して登録する。
+global secret は全 Sandbox がプロキシ経由で利用できる。Sandbox 固有の secret がある
+場合はそちらが優先される。Secret Service がない場合、`sbx` はホスト上のファイルに
+保存し、ファイル権限で保護する。登録後は Sandbox ごとに再入力せず利用できる：
+
+```sh
+sandbox-create --clone-only my-sandbox OWNER/REPOSITORY
+sbx exec my-sandbox gh issue view ISSUE_NUMBER --repo OWNER/REPOSITORY
+sandbox-opencode my-sandbox
+```
+
+`--clone-only` は既存 Sandbox に clone するためのコマンドで、clone 失敗後の再試行にも使える。
+既に `project` が存在する場合は削除・上書きしない。状態を確認してから再試行する。
+
 次のようにSandbox内のプロジェクトflakeを
 `nix develop`へ引き継いでOpenCodeを起動する。プロジェクトのdevShellに
 `opencode`が含まれない場合でも、Kitイメージに含まれるOpenCodeを利用する。
 
 ```sh
-sbx exec -it my-sandbox sh /home/agent/nix-opencode.sh \
-  /home/agent/workspace/project run \
+sandbox-opencode my-sandbox run \
   --model openrouter/deepseek/deepseek-v4.1-flash-1017 \
   "Issueの実装内容"
 ```
 
-GitHub の認証は proxy が扱う。Sandbox 内でブランチとコミットを作ったら、例えば次の
-ように bundle にまとめてホストへ取り出す。`BRANCH` は Sandbox 内で作成したブランチ名、
-`SANDBOX` は Sandbox 名を指定する。bundle にはブランチの Git 履歴が含まれるため、
+`sandbox-opencode` は端末から実行した場合にTTYを割り当てる。Codexからの利用では
+`sandbox-workflow` Skill が作成・起動・成果物回収の手順を案内する。
+
+GitHub の認証は proxy が扱う。Sandbox 内でブランチとコミットを作ったら、次のように
+bundle にまとめてホストへ取り出す。`BRANCH` は Sandbox 内のローカルブランチ名、
+`SANDBOX` は Sandbox 名を指定する。出力先ディレクトリは存在しないものを指定する。
+Sandbox 内の `/tmp` に作成した一時 bundle は残る。bundle には Git 履歴が含まれるため、
 ホスト上でも非公開リポジトリと同様に扱う：
 
 ```sh
-sbx exec SANDBOX git -C /home/agent/workspace/project bundle create /home/agent/workspace/result.bundle BRANCH
-sbx cp SANDBOX:/home/agent/workspace/result.bundle ./result.bundle
+sandbox-bundle SANDBOX BRANCH ./sandbox-result
 ```
 
 ホスト側の隔離したレビュー用 clone で bundle を `git fetch` し、差分とテストを確認してから
 ホストの認証で作業ブランチを push・PR 作成する。ホストの元の作業ツリーに直接 fetch する必要はない。
 bundle を直接 clone する場合は、既定の HEAD が含まれないことがあるため、
-`git clone --branch BRANCH ./result.bundle review-clone` のようにブランチを指定する。
+`git clone --branch BRANCH ./sandbox-result/result.bundle review-clone` のようにブランチを指定する。
 読み取り専用 token の Push は `--dry-run` で 403 を確認したが、GitHub の個別設定や token の
 権限は実際に使用するものを確認する。Sandbox に入るコードや Issue は使用するモデルへ送信される。
 
