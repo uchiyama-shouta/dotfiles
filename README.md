@@ -166,26 +166,19 @@ arona-desktop の `pnpm check:local --dry-run` は Actrun の固定依存
 Kit による Nix 環境の作成・非公開リポジトリと Issue の読み取り・コミット回収は検証済みだが、
 複数 Issue の並列実行やプロバイダー変更後の構成は未検証。
 
-## Electron への Playwright MCP 接続
+## Playwright MCP
 
-Codex / OpenCode に Playwright MCP を登録し、`http://127.0.0.1:9222` の
-CDP endpoint に接続する。ブラウザの追加インストールは不要。
-初回起動時には `npx` が `@playwright/mcp@latest` を取得するためネットワークが必要で、
-MCP のバージョンは flake.lock の管理外となる。
+Codex / OpenCode に Playwright MCP を登録する。通常は Playwright MCP がブラウザを
+起動し、Web サイトやローカルの Web アプリを操作する。ブラウザが未導入の場合は
+Playwright のブラウザを別途インストールする必要がある。初回起動時には `npx` が
+`@playwright/mcp@latest` を取得するためネットワークが必要で、MCP のバージョンは
+flake.lock の管理外となる。
 
-対象の Electron アプリを完全に終了してから、デバッグポート付きで起動する。
-
-```sh
-/path/to/electron-app --remote-debugging-port=9222
-curl http://127.0.0.1:9222/json/version
-```
-
-Home Manager 適用後に Codex / OpenCode を再起動し、Playwright のタブ一覧から
-対象ウィンドウを選択する。操作対象は renderer の Web UI で、main process や
-OS のネイティブダイアログの操作は対象外。デバッグポートなしで既に起動している
-アプリへの接続には再起動が必要。ポートは外部に公開しない。
-WSL と Windows、または Sandbox をまたぐ場合は loopback が同じ接続先を指すとは
-限らないため、到達可能な endpoint に両設定の URL を変更する。
+既存の Chromium 系ブラウザや Electron アプリへの接続には、対象をデバッグポート付きで
+起動し、MCP の起動引数に `--cdp-endpoint http://127.0.0.1:9222` を追加する。
+Electron の操作対象は renderer の Web UI で、main process や OS のネイティブ
+ダイアログは対象外。デバッグポートは外部に公開しない。WSL と Windows、または
+Sandbox をまたぐ場合は loopback が同じ接続先を指すとは限らない。
 
 ## 検証
 

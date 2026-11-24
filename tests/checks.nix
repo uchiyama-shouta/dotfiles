@@ -137,7 +137,7 @@ in
         jaq -e '
           .mcp.playwright.type == "local"
           and .mcp.playwright.enabled == true
-          and .mcp.playwright.command == ["${pkgs.nodejs_22}/bin/npx", "-y", "@playwright/mcp@latest", "--cdp-endpoint", "http://127.0.0.1:9222"]
+          and .mcp.playwright.command == ["${pkgs.nodejs_22}/bin/npx", "-y", "@playwright/mcp@latest"]
         ' ${file}
         jaq -e '
           .permission.edit == "allow"
@@ -187,7 +187,7 @@ in
         jaq --from toml -e '
           .model == "${cfg.programs.codex.settings.model}"
           and .mcp_servers.playwright.command == "${pkgs.nodejs_22}/bin/npx"
-          and .mcp_servers.playwright.args == ["-y", "@playwright/mcp@latest", "--cdp-endpoint", "http://127.0.0.1:9222"]
+          and .mcp_servers.playwright.args == ["-y", "@playwright/mcp@latest"]
           and .projects["/tmp/example-project"].trust_level == "trusted"
           and .tui.model_availability_nux.example == 7
           and .tui.keymap.composer.submit == ["alt-enter"]

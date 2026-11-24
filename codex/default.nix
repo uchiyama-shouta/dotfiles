@@ -9,8 +9,6 @@
         args = [
           "-y"
           "@playwright/mcp@latest"
-          "--cdp-endpoint"
-          "http://127.0.0.1:9222"
         ];
       };
       model = "gpt-6-astra";

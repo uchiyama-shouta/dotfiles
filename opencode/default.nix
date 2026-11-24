@@ -12,8 +12,6 @@
           "${pkgs.nodejs_22}/bin/npx"
           "-y"
           "@playwright/mcp@latest"
-          "--cdp-endpoint"
-          "http://127.0.0.1:9222"
         ];
         enabled = true;
       };
