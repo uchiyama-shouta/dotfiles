@@ -1,8 +1,18 @@
+{ pkgs, ... }:
 {
   programs.codex = {
     enable = true;
     mutableSettings = true;
     settings = {
+      mcp_servers.playwright = {
+        command = "${pkgs.nodejs_22}/bin/npx";
+        args = [
+          "-y"
+          "@playwright/mcp@latest"
+          "--cdp-endpoint"
+          "http://127.0.0.1:9222"
+        ];
+      };
       model = "gpt-6-astra";
       model_reasoning_effort = "low";
       tui = {
