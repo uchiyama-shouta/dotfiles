@@ -6,6 +6,15 @@ permissions:
     allow:
       - releases.nixos.org:443
       - cache.nixos.org:443
+      - index.crates.io:443
+      - static.crates.io:443
+      - mcp.exa.ai:443
+      - docs.github.com:443
+      - nix.dev:443
+      - nixos.org:443
+      - doc.rust-lang.org:443
+      - docs.rs:443
+      - playwright.dev:443
     deny:
       - aiplatform.googleapis.com:443
       - api.anthropic.com:443

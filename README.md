@@ -101,6 +101,17 @@ sandbox-opencode my-sandbox
 `--clone-only` は既存 Sandbox に clone するためのコマンドで、clone 失敗後の再試行にも使える。
 既に `project` が存在する場合は削除・上書きしない。状態を確認してから再試行する。
 
+プロジェクトが `apm.yml` と `apm.lock.yaml` で外部 Skill を管理している場合、内容を
+確認したうえで `sandbox-restore-skills my-sandbox` を実行すると、Sandbox 内で
+flake.lock の llm-agents.nix に固定した APM を Nix 経由で実行し、`install --frozen` と
+`audit --ci` を行う。復元は明示的に実行し、Sandbox 作成時には自動実行しない。
+このコマンドは APM の初回ビルドに必要な `pypi.io` と `files.pythonhosted.org` を
+対象 Sandbox のみに許可する。追加ルールは Sandbox の削除まで維持される。
+APM による追加の接続先はプロジェクトの依存関係によって異なる。
+初回は Nix の依存物取得に容量と時間を要する。APM が外部ポリシー取得に失敗した場合は、
+監査が成功してもポリシー適用の警告を確認する。
+Kit の通信ルールは新規作成時に適用され、作成済み Sandbox には自動反映されない。
+
 次のようにSandbox内のプロジェクトflakeを
 `nix develop`へ引き継いでOpenCodeを起動する。プロジェクトのdevShellに
 `opencode`が含まれない場合でも、Kitイメージに含まれるOpenCodeを利用する。
@@ -113,6 +124,18 @@ sandbox-opencode my-sandbox run \
 
 `sandbox-opencode` は端末から実行した場合にTTYを割り当てる。Codexからの利用では
 `sandbox-workflow` Skill が作成・起動・成果物回収の手順を案内する。
+
+`sandbox-opencode` から起動した OpenCode の Web 検索は既定で有効。検索語は Exa に送られる。ページ取得は通信先の許可が
+必要で、Kit は GitHub、Nix、Rust、Playwright の公式ドキュメントのホストを許可する。
+許可されていないサイトが必要な場合は、必要性を確認し、その Sandbox にのみ追加できる：
+
+```sh
+sbx policy allow network --sandbox my-sandbox example.org:443
+```
+
+許可したホストには Sandbox 内の他のプログラムも通信でき、情報の送信先にもなりうる。
+すべての Web サイトへの通信を許可するものではない。
+検証した Sandbox 内 OpenCode は 1.19.5。バージョン変更時は検索設定を再確認する。
 
 GitHub の認証は proxy が扱う。Sandbox 内でブランチとコミットを作ったら、次のように
 bundle にまとめてホストへ取り出す。`BRANCH` は Sandbox 内のローカルブランチ名、
@@ -131,13 +154,15 @@ bundle を直接 clone する場合は、既定の HEAD が含まれないこと
 読み取り専用 token の Push は `--dry-run` で 403 を確認したが、GitHub の個別設定や token の
 権限は実際に使用するものを確認する。Sandbox に入るコードや Issue は使用するモデルへ送信される。
 
-これは実験段階の構成。OpenCode の無料モデルは利用上限に達する場合がある。以前の検証では
-Sandbox 内の Playwright 用 Chromium と crates.io の取得がネットワークポリシーで拒否されたため、
-ブラウザテストはホスト側で実施した。検証用 `opencode-arona-readonly` には後から
-`index.crates.io`、`static.crates.io`、`cdn.playwright.dev` の許可を個別に追加している。
-これらは Kit に含まれず、新規 Sandbox には自動適用されない。各ホストへのHTTPS接続は
-確認済みだが、依存関係やブラウザのダウンロード全体は再検証していない。
+これは実験段階の構成。OpenCode の無料モデルは利用上限に達する場合がある。
+Rust の registry と crate 配布先 `index.crates.io` / `static.crates.io` は Kit で許可する。
+Playwright のブラウザ取得は CDN とリダイレクト先が必要で、Kit に含まれていない。
+検証用 Sandbox では `cdn.playwright.dev` と `storage.googleapis.com` を許可して取得できたが、
+ダウンロード版 Chromium は共有ライブラリ不足で起動できなかった。Nix 版 Chromium は起動したが、
+arona-desktop のブラウザテスト 3 件中 2 件が失敗しており、原因は未特定。
 WSL 上の Tauri は EGL エラーで描画を確認できていない。
+arona-desktop の `pnpm check:local --dry-run` は Actrun の固定依存
+`moonbit-community/yaml` 0.0.6 の取得元が 404 を返し、未完了。
 Kit による Nix 環境の作成・非公開リポジトリと Issue の読み取り・コミット回収は検証済みだが、
 複数 Issue の並列実行やプロバイダー変更後の構成は未検証。
 
