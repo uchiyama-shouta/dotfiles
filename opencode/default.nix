@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   programs.opencode = {
     enable = true;
@@ -5,6 +6,15 @@
     validateFiles.config = true;
 
     settings = {
+      mcp.playwright = {
+        type = "local";
+        command = [
+          "${pkgs.nodejs_22}/bin/npx"
+          "-y"
+          "@playwright/mcp@latest"
+        ];
+        enabled = true;
+      };
       permission = {
         edit = "allow";
         read = {

@@ -166,6 +166,20 @@ arona-desktop の `pnpm check:local --dry-run` は Actrun の固定依存
 Kit による Nix 環境の作成・非公開リポジトリと Issue の読み取り・コミット回収は検証済みだが、
 複数 Issue の並列実行やプロバイダー変更後の構成は未検証。
 
+## Playwright MCP
+
+Codex / OpenCode に Playwright MCP を登録する。通常は Playwright MCP がブラウザを
+起動し、Web サイトやローカルの Web アプリを操作する。ブラウザが未導入の場合は
+Playwright のブラウザを別途インストールする必要がある。初回起動時には `npx` が
+`@playwright/mcp@latest` を取得するためネットワークが必要で、MCP のバージョンは
+flake.lock の管理外となる。
+
+既存の Chromium 系ブラウザや Electron アプリへの接続には、対象をデバッグポート付きで
+起動し、MCP の起動引数に `--cdp-endpoint http://127.0.0.1:9222` を追加する。
+Electron の操作対象は renderer の Web UI で、main process や OS のネイティブ
+ダイアログは対象外。デバッグポートは外部に公開しない。WSL と Windows、または
+Sandbox をまたぐ場合は loopback が同じ接続先を指すとは限らない。
+
 ## 検証
 
 作業中の新規ファイルも評価するため、以下は`path:.`を使用する。
