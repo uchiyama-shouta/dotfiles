@@ -72,6 +72,7 @@
             home-manager.nixosModules.home-manager
             {
               home-manager = {
+                extraSpecialArgs = { inherit llm-agents; };
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 users.shota = import ./hosts/shota-nixos/home-manager.nix;

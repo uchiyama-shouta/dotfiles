@@ -52,9 +52,9 @@ shellコマンドは、gitの読み取り操作を含めて複合コマンドや
 権限を緩める変更はプロジェクト側でも行わないこと。OSレベルの隔離
 (bubblewrapラッパー)は未実装であり、別の段階で設計・検証する。
 
-### WSL の Docker Sandboxes（検証中）
+### Docker Sandboxes（検証中）
 
-WSL 向け Home Manager に `sbx` を導入し、Nix 開発環境用 Kit を
+WSL と NixOS 向け Home Manager に `sbx` を導入し、Nix 開発環境用 Kit を
 `~/.config/sbx/nix-kit` に配置する。Kit は Nix 2.35.4 の配布物をハッシュ検証して
 Sandbox 内に導入する。ホストのプロジェクトを共有せず、共有 Skills を無効にして作成する：
 
