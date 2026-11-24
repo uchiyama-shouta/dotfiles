@@ -1,6 +1,9 @@
 { pkgs, ... }:
 {
-  imports = [ ../common/home-manager.nix ];
+  imports = [
+    ../common/home-manager.nix
+    ../../sandbox
+  ];
   home = {
     username = "shota";
     homeDirectory = "/home/shota";
