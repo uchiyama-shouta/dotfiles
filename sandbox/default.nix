@@ -39,7 +39,7 @@ let
   };
 in
 {
-  home.file.".codex/skills/sandbox-workflow/SKILL.md".source = ./skill/SKILL.md;
+  home.file.".codex/skills/sandbox-workflow".source = ./skill;
   xdg.configFile."sbx/nix-kit" = {
     source = ./nix-kit;
     recursive = true;
