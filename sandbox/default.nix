@@ -29,6 +29,14 @@ let
     ];
     text = builtins.readFile ./bundle.sh;
   };
+  sandbox-restore-skills = pkgs.writeShellApplication {
+    name = "sandbox-restore-skills";
+    runtimeInputs = [ sbx ];
+    text = ''
+      export SANDBOX_APM_FLAKE=${lib.escapeShellArg "github:numtide/llm-agents.nix/${llm-agents.rev}#apm"}
+    ''
+    + builtins.readFile ./restore-skills.sh;
+  };
 in
 {
   home.file.".codex/skills/sandbox-workflow/SKILL.md".source = ./skill/SKILL.md;
@@ -54,5 +62,6 @@ in
     sandbox-create
     sandbox-opencode
     sandbox-bundle
+    sandbox-restore-skills
   ];
 }
